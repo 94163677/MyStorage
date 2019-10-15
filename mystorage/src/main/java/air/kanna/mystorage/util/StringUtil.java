@@ -18,10 +18,10 @@ public class StringUtil {
 	 * @return
 	 */
 	public static boolean isNull(String str){
-		return Nullable.isNull(str);
+		return str == null || str.length() <= 0;
 	}
 	public static boolean isNotNull(String str){
-	    return !Nullable.isNull(str);
+	    return !isNull(str);
 	}
 	
 	/**

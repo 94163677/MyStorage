@@ -1,3 +1,6 @@
+CREATE TABLE IF NOT EXISTS db_version (
+  version TEXT NOT NULL);
+
 CREATE TABLE IF NOT EXISTS disk_description (
   id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
   version TEXT NOT NULL,
@@ -26,5 +29,8 @@ CREATE INDEX file_list_idx01
   
 CREATE INDEX file_list_idx02
   ON file_list (file_name);
+  
+CREATE INDEX file_list_idx02
+  ON file_list (update_date);
   
   

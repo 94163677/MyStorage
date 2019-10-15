@@ -30,7 +30,7 @@ public class NumberUtil {
      * @return 字节数组的hex字符串
      */
     public static String toHexString(byte[] bytes) {
-        if(Nullable.isNull(bytes)) {
+        if(bytes == null || bytes.length <= 0) {
             return "";
         }
         StringBuilder sb = new StringBuilder();
@@ -46,7 +46,7 @@ public class NumberUtil {
      * @return 字节数组
      */
     public static byte[] fromHexString(String hexString) {
-        if(Nullable.isNull(hexString)) {
+        if(StringUtil.isNull(hexString)) {
             return new byte[0];
         }
         

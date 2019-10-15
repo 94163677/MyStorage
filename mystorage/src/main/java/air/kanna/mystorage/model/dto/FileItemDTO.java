@@ -2,7 +2,7 @@ package air.kanna.mystorage.model.dto;
 
 import air.kanna.mystorage.model.FileType;
 
-public class FileItemDto {
+public class FileItemDTO {
 
     /*
      * 唯一键

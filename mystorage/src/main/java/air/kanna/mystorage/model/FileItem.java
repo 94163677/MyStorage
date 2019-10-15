@@ -1,16 +1,16 @@
 package air.kanna.mystorage.model;
 
-import air.kanna.mystorage.model.dto.FileItemDto;
+import air.kanna.mystorage.model.dto.FileItemDTO;
 import air.kanna.mystorage.util.DateTimeUtil;
-import air.kanna.mystorage.util.Nullable;
+import air.kanna.mystorage.util.StringUtil;
 
-public class FileItem extends FileItemDto{
+public class FileItem extends FileItemDTO{
     
-    public FileItem(FileItemDto dto) {
+    public FileItem(FileItemDTO dto) {
         fromDto(dto);
     }
     
-    private void fromDto(FileItemDto dto) {
+    private void fromDto(FileItemDTO dto) {
         if(dto == null) {
             throw new NullPointerException("FileItemDto is null");
         }
@@ -22,7 +22,7 @@ public class FileItem extends FileItemDto{
         }
         setDiskId(dto.getDiskId());
         
-        if(Nullable.isNull(dto.getFileName())) {
+        if(StringUtil.isNull(dto.getFileName())) {
             throw new NullPointerException("FileItemDto's FileName is null");
         }
         setFileName(dto.getFileName());
@@ -31,7 +31,7 @@ public class FileItem extends FileItemDto{
         
         setFileSize(dto.getFileSize());
         
-        if(Nullable.isNull(dto.getFilePath())) {
+        if(StringUtil.isNull(dto.getFilePath())) {
             throw new NullPointerException("FileItemDto's FilePath is null");
         }
         setFilePath(dto.getFilePath());
@@ -46,21 +46,23 @@ public class FileItem extends FileItemDto{
     }
     
     /*
+     * 文件所属磁盘/目录
+     */
+    private DiskDescription diskDescription = null;
+    
+    /*
      * 文件类型
-     * 1字节
      */
     private FileType fileTypeObj = FileType.TYPE_ROOT;
     
     /*
      * 文件创建日期
-     * 19字节
      * 格式：YYYY-MM-DD HH:mm:SS
      */
     private String createDateStr = "";
     
     /*
      * 文件最后修改日期
-     * 19字节
      * 格式：YYYY-MM-DD HH:mm:SS
      */
     private String lastModDateStr = "";

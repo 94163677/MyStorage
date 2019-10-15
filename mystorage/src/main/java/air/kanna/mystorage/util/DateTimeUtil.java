@@ -50,7 +50,7 @@ public class DateTimeUtil {
      * @throws ParseException
      */
     public static long getDateTimeFromString(String formated){
-        if(Nullable.isNull(formated)) {
+        if(StringUtil.isNull(formated)) {
             throw new NullPointerException("formated dateTime is null");
         }
         try {
