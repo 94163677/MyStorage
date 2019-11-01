@@ -4,10 +4,13 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
 import air.kanna.mystorage.dao.BaseModelDAO;
+import air.kanna.mystorage.dao.OrderBy;
 import air.kanna.mystorage.dao.Pager;
 
 public abstract class BaseSqliteDAO<T> implements BaseModelDAO<T>{
@@ -32,10 +35,87 @@ public abstract class BaseSqliteDAO<T> implements BaseModelDAO<T>{
     
     protected abstract String getTableName();
     protected abstract String getKeyCloumName();
+    protected abstract String getInsertSQL(T object);
+    protected abstract String getUpdateSQL(T object);
+    protected abstract T resultSet2Object(ResultSet result)throws SQLException;
+    
+    @Override
+    public T getById(Object id) {
+        ResultSet result = getByIdResultSet(id);
+        if(result == null) {
+            return null;
+        }
+        try {
+            if(!result.next()) {
+                logger.warn("Cannot found Object by id: " + id.toString());
+                return null;
+            }
+            
+            return resultSet2Object(result);
+        }catch(SQLException e) {
+            logger.error("Parse ResultSet error", e);
+        }
+        return null;
+    }
+    
+    @Override
+    public int update(T object) {
+        if(object == null) {
+            logger.warn("DiskDescriptionDTO is null");
+            return -1;
+        }
+        String sql = getUpdateSQL(object);
+        logger.info(sql);
+        try {
+            return stat.executeUpdate(sql);
+        }catch(SQLException e) {
+            logger.error("Insert DiskDescriptionDTO error", e);
+        }
+        return -1;
+    }
+    
+    @Override
+    public List<T> listAll(OrderBy order, Pager pager){
+        ResultSet result = listAllResultSet(order, pager);
+        List<T> list = new ArrayList<>();
+        
+        if(result == null) {
+            return null;
+        }
+        try {
+            for(;result.next();) {
+                T object = resultSet2Object(result);
+                if(object != null) {
+                    list.add(object);
+                }
+            }
+        }catch(SQLException e) {
+            logger.error("Parse ResultSet error", e);
+            return null;
+        }
+        return list;
+    }
+    
+    @Override
+    public int insert(T object) {
+        if(object == null) {
+            logger.warn("insert object is null");
+            return -1;
+        }
+        String sql = getInsertSQL(object);
+        logger.info(sql);
+        try {
+            return stat.executeUpdate(sql);
+        }catch(SQLException e) {
+            logger.error("Insert object error", e);
+        }
+        return -1;
+    }
     
     @Override
     public int deleteById(Object id) {
         if(id == null) {
+            logger.warn("Object's id is null");
             return -1;
         }
         
@@ -51,6 +131,8 @@ public abstract class BaseSqliteDAO<T> implements BaseModelDAO<T>{
             sb.append('\'').append(id.toString()).append('\'');
         }
         
+        logger.info(sb.toString());
+        
         try {
             return stat.executeUpdate(sb.toString());
         }catch(SQLException e) {
@@ -61,6 +143,7 @@ public abstract class BaseSqliteDAO<T> implements BaseModelDAO<T>{
     
     protected ResultSet getByIdResultSet(Object id) {
         if(id == null) {
+            logger.warn("Object's id is null");
             return null;
         }
         StringBuilder sb = new StringBuilder();
@@ -75,6 +158,7 @@ public abstract class BaseSqliteDAO<T> implements BaseModelDAO<T>{
             sb.append('\'').append(id.toString()).append('\'');
         }
         
+        logger.info(sb.toString());
         try {
             return stat.executeQuery(sb.toString());
         }catch(SQLException e) {
@@ -83,18 +167,32 @@ public abstract class BaseSqliteDAO<T> implements BaseModelDAO<T>{
         }
     }
     
-    protected ResultSet listAllResultSet(Pager pager) {
+    protected ResultSet listAllResultSet(OrderBy order, Pager pager) {
         StringBuilder sb = new StringBuilder();
 
         sb.append("SELECT * FROM ").append(getTableName());
+        sb.append(getOrderSQL(order));
         sb.append(getPagerSQL(pager));
         
+        logger.info(sb.toString());
         try {
             return stat.executeQuery(sb.toString());
         }catch(SQLException e) {
             logger.error("list all error: " + sb.toString(), e);
             return null;
         }
+    }
+    
+    protected String getOrderSQL(OrderBy order) {
+        if(order != null && order.getOrderPairs().size() > 0) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(" ORDER BY ");
+            for(String[] pair : order.getOrderPairs()) {
+                sb.append(pair[1]).append(' ').append(pair[0]).append(' ');
+            }
+            return sb.toString();
+        }
+        return "";
     }
     
     protected String getPagerSQL(Pager pager) {

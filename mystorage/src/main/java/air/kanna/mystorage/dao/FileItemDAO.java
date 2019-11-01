@@ -6,6 +6,8 @@ import air.kanna.mystorage.dao.condition.FileItemCondition;
 import air.kanna.mystorage.model.dto.FileItemDTO;
 
 public interface FileItemDAO extends BaseModelDAO<FileItemDTO>{
+    int listByConditionCount(FileItemCondition condition);
+    List<FileItemDTO> listByCondition(FileItemCondition condition, OrderBy order, Pager pager);
     
-    List<FileItemDTO> listByCondition(FileItemCondition condition, Pager pager);
+    int deleteByCondition(FileItemCondition condition);
 }

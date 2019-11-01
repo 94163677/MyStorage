@@ -44,7 +44,7 @@ public class DateTimeUtil {
     }
     
     /**
-     * 从格式化后的日获取日期数字
+     * 从格式化后的日期获取日期数字
      * @param formated
      * @return
      * @throws ParseException
@@ -54,18 +54,57 @@ public class DateTimeUtil {
             throw new NullPointerException("formated dateTime is null");
         }
         try {
-            Date date = getDateFormat().parse(formated);
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            
-            return calendar.get(Calendar.YEAR) * 10000000000L
-                    + (calendar.get(Calendar.MONTH) + 1) * 100000000L
-                    + calendar.get(Calendar.DAY_OF_MONTH) * 1000000L
-                    + calendar.get(Calendar.HOUR_OF_DAY) * 10000L
-                    + calendar.get(Calendar.MINUTE) * 100L
-                    + calendar.get(Calendar.SECOND);
+            return getDateTimeFromDate(getDateFormat().parse(formated));
         }catch(ParseException e) {
-            throw new IllegalArgumentException("parse date string error: " + formated);
+            throw new IllegalArgumentException("parse date string error: " + formated, e);
         }
+    }
+    
+    /**
+     * 从日期类获取日期数字
+     * @param date
+     * @return
+     */
+    public static long getDateTimeFromTimeMillis(long millis) {
+        if(millis <= 0) {
+            throw new NullPointerException("TimeMillis is <= 0");
+        }
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(millis);
+        
+        return getDateTimeFromCalendar(calendar);
+    }
+    
+    /**
+     * 从日期类获取日期数字
+     * @param date
+     * @return
+     */
+    public static long getDateTimeFromDate(Date date) {
+        if(date == null) {
+            throw new NullPointerException("Date is null");
+        }
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        
+        return getDateTimeFromCalendar(calendar);
+    }
+    
+    /**
+     * 
+     * @param date
+     * @return
+     */
+    public static long getDateTimeFromCalendar(Calendar calendar) {
+        if(calendar == null) {
+            throw new NullPointerException("Calendar is null");
+        }
+
+        return calendar.get(Calendar.YEAR) * 10000000000L
+                + (calendar.get(Calendar.MONTH) + 1) * 100000000L
+                + calendar.get(Calendar.DAY_OF_MONTH) * 1000000L
+                + calendar.get(Calendar.HOUR_OF_DAY) * 10000L
+                + calendar.get(Calendar.MINUTE) * 100L
+                + calendar.get(Calendar.SECOND);
     }
 }
