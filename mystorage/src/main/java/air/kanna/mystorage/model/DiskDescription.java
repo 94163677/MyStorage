@@ -17,4 +17,16 @@ public class DiskDescription extends DiskDescriptionDTO{
         setDescription(dto.getDescription());
         setLastUpdate(dto.getLastUpdate());
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null) {
+            return false;
+        }
+        if(obj instanceof DiskDescription) {
+            DiskDescription disk = (DiskDescription)obj;
+            return disk.getBasePath().equals(getBasePath());
+        }
+        return false;
+    }
 }

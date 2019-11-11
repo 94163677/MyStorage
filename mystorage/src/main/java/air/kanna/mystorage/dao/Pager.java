@@ -8,6 +8,8 @@ public class Pager {
     private int page = DEFAULT_PAGE;
     private int size = DEFAULT_SIZE;
     
+    private int total = 0;
+    
     public Pager() {}
     
     public Pager(int page, int size) {
@@ -35,5 +37,13 @@ public class Pager {
             size = DEFAULT_SIZE;
         }
         this.size = size;
+    }
+
+    public int getTotal() {
+        return total;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
     }
 }

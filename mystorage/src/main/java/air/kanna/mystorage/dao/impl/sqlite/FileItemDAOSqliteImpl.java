@@ -114,6 +114,11 @@ public class FileItemDAOSqliteImpl
         String conditionSql = getConditionSQL(condition);
         String fullSql = null;
         
+        //不能一次删除所有数据
+        if(StringUtil.isSpace(conditionSql)) {
+            throw new IllegalArgumentException("Delete Condition is null");
+        }
+        
         sql.append(" DELETE FROM ").append(getTableName()).append(" WHERE 1 = 1 ");
         sql.append(conditionSql);
         fullSql = sql.toString();
@@ -233,7 +238,7 @@ public class FileItemDAOSqliteImpl
             sb.append(" AND file_name LIKE \'%").append(condition.getFileName()).append("%\'");
         }
         if(condition.getFileType() >= '0') {
-            sb.append(" AND fileType = ").append((int)condition.getFileType());
+            sb.append(" AND file_type = ").append((int)condition.getFileType());
         }
         if(condition.getFileSizeMin() != null) {
             sb.append(" AND file_size >= ").append(condition.getFileSizeMin().longValue());

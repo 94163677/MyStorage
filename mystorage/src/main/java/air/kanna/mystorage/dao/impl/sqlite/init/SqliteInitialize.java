@@ -10,10 +10,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.apache.log4j.Logger;
+
 import air.kanna.mystorage.MyStorage;
 import air.kanna.mystorage.util.StringUtil;
 
-public class SqliteInitialize {    
+public class SqliteInitialize {
+    private static final Logger logger = Logger.getLogger(SqliteInitialize.class);
+    
     private static final String PUT_VERSION =
             "INSERT INTO db_version(version) VALUES (\'" + MyStorage.VERSION + "\')";
     private static final String GET_VERSION =
@@ -52,7 +56,13 @@ public class SqliteInitialize {
         String sql = getInitTablesSql();
         Statement stat = conn.createStatement();
         
-        stat.execute(sql);
+        String[] sqls = sql.split(";");
+        for(int i=0; i<sqls.length; i++) {
+            if(StringUtil.isNotSpace(sqls[i])) {
+                logger.info("init tables: " + sqls[i]);
+                stat.execute(sqls[i]);
+            }
+        }
         
         int count = stat.executeUpdate(PUT_VERSION);
         if(count <= 0) {

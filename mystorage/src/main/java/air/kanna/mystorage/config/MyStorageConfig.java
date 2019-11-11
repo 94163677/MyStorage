@@ -1,6 +1,11 @@
 package air.kanna.mystorage.config;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MyStorageConfig {
+    public static final int DEFAULT_PAGE_SIZE = 50;
+    
     private String dbPath = "DB";
     private String backPath = "BACKUP";
     private String dbFileName = "MyStorage.db";
@@ -8,6 +13,10 @@ public class MyStorageConfig {
     private String searchFileName = "";
     private String searchFileType = "";
     private String searchDiskPath = "";
+    
+    private int pageSize = DEFAULT_PAGE_SIZE;
+    private List<Integer> tableColumnWidth = new ArrayList<>();
+    
     public String getDbPath() {
         return dbPath;
     }
@@ -43,5 +52,17 @@ public class MyStorageConfig {
     }
     public void setSearchDiskPath(String searchDiskPath) {
         this.searchDiskPath = searchDiskPath;
+    }
+    public int getPageSize() {
+        return pageSize;
+    }
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
+    public List<Integer> getTableColumnWidth() {
+        return tableColumnWidth;
+    }
+    public void setTableColumnWidth(List<Integer> tableColumnWidth) {
+        this.tableColumnWidth = tableColumnWidth;
     }
 }

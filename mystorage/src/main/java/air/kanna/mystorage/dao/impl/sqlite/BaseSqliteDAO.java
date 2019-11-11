@@ -65,11 +65,11 @@ public abstract class BaseSqliteDAO<T> implements BaseModelDAO<T>{
             return -1;
         }
         String sql = getUpdateSQL(object);
-        logger.info(sql);
+        
         try {
             return stat.executeUpdate(sql);
         }catch(SQLException e) {
-            logger.error("Insert DiskDescriptionDTO error", e);
+            logger.error("Update object error: " + sql, e);
         }
         return -1;
     }
@@ -103,11 +103,11 @@ public abstract class BaseSqliteDAO<T> implements BaseModelDAO<T>{
             return -1;
         }
         String sql = getInsertSQL(object);
-        logger.info(sql);
+
         try {
             return stat.executeUpdate(sql);
         }catch(SQLException e) {
-            logger.error("Insert object error", e);
+            logger.error("Insert object error: " + sql, e);
         }
         return -1;
     }
@@ -131,12 +131,12 @@ public abstract class BaseSqliteDAO<T> implements BaseModelDAO<T>{
             sb.append('\'').append(id.toString()).append('\'');
         }
         
-        logger.info(sb.toString());
+        String sql = sb.toString();
         
         try {
-            return stat.executeUpdate(sb.toString());
+            return stat.executeUpdate(sql);
         }catch(SQLException e) {
-            logger.error("delete error: " + sb.toString(), e);
+            logger.error("delete object error: " + sql, e);
             return -1;
         }
     }

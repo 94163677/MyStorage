@@ -3,6 +3,8 @@ package air.kanna.mystorage.config.impl;
 import java.io.File;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
+
 import air.kanna.kindlesync.config.impl.BaseFileConfigService;
 import air.kanna.kindlesync.util.Nullable;
 import air.kanna.mystorage.config.MyStorageConfig;
@@ -11,7 +13,8 @@ import air.kanna.mystorage.config.MyStorageConfigService;
 public class MyStorageConfigServicePropertiesImpl 
         extends BaseFileConfigService<MyStorageConfig> 
         implements MyStorageConfigService{
-
+    private static final Logger logger = Logger.getLogger(MyStorageConfigServicePropertiesImpl.class);
+    
     public MyStorageConfigServicePropertiesImpl(File propFile) {
         super(propFile);
     }
@@ -53,6 +56,37 @@ public class MyStorageConfigServicePropertiesImpl
         if(!Nullable.isNull(temp)) {
             config.setSearchDiskPath(temp);
         }
+        
+        temp = prop.getProperty("pageSize");
+        if(!Nullable.isNull(temp)) {
+            try {
+                int pagesize = Integer.parseInt(temp);
+                if(pagesize > 0) {
+                    config.setPageSize(pagesize);
+                }
+            }catch(Exception e) {
+                logger.warn("parse page size error", e);
+            }
+        }
+        
+        temp = prop.getProperty("tableColumnWidth");
+        if(!Nullable.isNull(temp)) {
+            String[] widths = temp.split(";");
+            if(widths == null) {
+                widths = new String[] {temp};
+            }
+            for(int i=0; i<widths.length; i++) {
+                if(Nullable.isNull(widths[i])) {
+                    continue;
+                }
+                try {
+                    config.getTableColumnWidth().add(Integer.parseInt(widths[i]));
+                }catch(Exception e) {
+                    logger.warn("tableColumnWidth parse error at " + i, e);
+                    config.getTableColumnWidth().add(0);
+                }
+            }
+        }
 
         return config;
     }
@@ -71,6 +105,15 @@ public class MyStorageConfigServicePropertiesImpl
         prop.put("searchFileName", config.getSearchFileName());
         prop.put("searchFileType", config.getSearchFileType());
         prop.put("searchDiskPath", config.getSearchDiskPath());
+        
+        prop.put("pageSize", ("" + config.getPageSize()));
+        StringBuilder sb = new StringBuilder();
+        for(Integer width : config.getTableColumnWidth()) {
+            if(width != null) {
+                sb.append(width.intValue()).append(';');
+            }
+        }
+        prop.put("tableColumnWidth", sb.toString());
         
         return prop;
     }

@@ -30,7 +30,5 @@ CREATE INDEX file_list_idx01
 CREATE INDEX file_list_idx02
   ON file_list (file_name);
   
-CREATE INDEX file_list_idx02
+CREATE INDEX file_list_idx03
   ON file_list (update_date);
-  
-  

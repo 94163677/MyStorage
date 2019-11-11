@@ -357,3 +357,865 @@
 [INFO] [2019-10-14 17:11:53.000644][air.kanna.mystorage.App.main(App.java:60)] - -50 - -50
 [INFO] [2019-10-14 17:11:53.000644][air.kanna.mystorage.App.main(App.java:65)] - -4961894156191489165
 [INFO] [2019-10-14 17:11:53.000644][air.kanna.mystorage.App.main(App.java:67)] - 2019-06-07 12:23:56
+[INFO] [2019-11-04 15:30:09.000725][air.kanna.mystorage.StartUp.initData(StartUp.java:90)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[WARN] [2019-11-04 15:30:09.000741][air.kanna.kindlesync.config.impl.BaseFileConfigService.getConfig(BaseFileConfigService.java:41)] - propConfigFile is null, is a directory or is not exists
+[INFO] [2019-11-04 15:30:10.000184][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[ERROR] [2019-11-04 15:30:10.000186][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:181)] - list all error: SELECT * FROM disk_description
+org.sqlite.SQLiteException: [SQLITE_ERROR] SQL error or missing database (no such table: disk_description)
+	at org.sqlite.core.DB.newSQLException(DB.java:941)
+	at org.sqlite.core.DB.newSQLException(DB.java:953)
+	at org.sqlite.core.DB.throwex(DB.java:918)
+	at org.sqlite.core.NativeDB.prepare_utf8(Native Method)
+	at org.sqlite.core.NativeDB.prepare(NativeDB.java:134)
+	at org.sqlite.core.DB.prepare(DB.java:257)
+	at org.sqlite.jdbc3.JDBC3Statement.executeQuery(JDBC3Statement.java:73)
+	at air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:179)
+	at air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAll(BaseSqliteDAO.java:79)
+	at air.kanna.mystorage.service.impl.BaseCRUDServiceImpl.listAll(BaseCRUDServiceImpl.java:30)
+	at air.kanna.mystorage.StartUp.reFlushDiskList(StartUp.java:144)
+	at air.kanna.mystorage.StartUp.initData(StartUp.java:116)
+	at air.kanna.mystorage.StartUp.<init>(StartUp.java:79)
+	at air.kanna.mystorage.StartUp$1.run(StartUp.java:284)
+	at java.awt.event.InvocationEvent.dispatch(Unknown Source)
+	at java.awt.EventQueue.dispatchEventImpl(Unknown Source)
+	at java.awt.EventQueue.access$500(Unknown Source)
+	at java.awt.EventQueue$3.run(Unknown Source)
+	at java.awt.EventQueue$3.run(Unknown Source)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(Unknown Source)
+	at java.awt.EventQueue.dispatchEvent(Unknown Source)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.run(Unknown Source)
+[INFO] [2019-11-04 15:35:54.000380][air.kanna.mystorage.StartUp.initData(StartUp.java:90)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[WARN] [2019-11-04 15:35:54.000386][air.kanna.kindlesync.config.impl.BaseFileConfigService.getConfig(BaseFileConfigService.java:41)] - propConfigFile is null, is a directory or is not exists
+[INFO] [2019-11-04 15:36:46.000848][air.kanna.mystorage.dao.impl.sqlite.init.SqliteInitialize.initTables(SqliteInitialize.java:59)] - init tables: CREATE TABLE IF NOT EXISTS db_version (
+  version TEXT NOT NULL);
+
+CREATE TABLE IF NOT EXISTS disk_description (
+  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  version TEXT NOT NULL,
+  base_path TEXT NOT NULL,
+  description TEXT,
+  last_update TEXT NOT NULL);
+  
+CREATE TABLE IF NOT EXISTS file_list (
+  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  disk_id INTEGER NOT NULL,
+  file_name TEXT NOT NULL,
+  file_type INTEGER NOT NULL,
+  file_size INTEGER NOT NULL,
+  file_path TEXT NOT NULL,
+  
+  file_hash_01 TEXT,
+  file_hash_02 TEXT,
+  file_hash_03 TEXT,
+  
+  create_date INTEGER NOT NULL,
+  update_date INTEGER NOT NULL,
+  remark TEXT);
+  
+CREATE INDEX file_list_idx01
+  ON file_list (disk_id);
+  
+CREATE INDEX file_list_idx02
+  ON file_list (file_name);
+  
+CREATE INDEX file_list_idx02
+  ON file_list (update_date);
+  
+  
+
+[INFO] [2019-11-04 15:37:20.000741][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[ERROR] [2019-11-04 15:37:20.000744][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:181)] - list all error: SELECT * FROM disk_description
+org.sqlite.SQLiteException: [SQLITE_ERROR] SQL error or missing database (no such table: disk_description)
+	at org.sqlite.core.DB.newSQLException(DB.java:941)
+	at org.sqlite.core.DB.newSQLException(DB.java:953)
+	at org.sqlite.core.DB.throwex(DB.java:918)
+	at org.sqlite.core.NativeDB.prepare_utf8(Native Method)
+	at org.sqlite.core.NativeDB.prepare(NativeDB.java:134)
+	at org.sqlite.core.DB.prepare(DB.java:257)
+	at org.sqlite.jdbc3.JDBC3Statement.executeQuery(JDBC3Statement.java:73)
+	at air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:179)
+	at air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAll(BaseSqliteDAO.java:79)
+	at air.kanna.mystorage.service.impl.BaseCRUDServiceImpl.listAll(BaseCRUDServiceImpl.java:30)
+	at air.kanna.mystorage.StartUp.reFlushDiskList(StartUp.java:144)
+	at air.kanna.mystorage.StartUp.initData(StartUp.java:116)
+	at air.kanna.mystorage.StartUp.<init>(StartUp.java:79)
+	at air.kanna.mystorage.StartUp$1.run(StartUp.java:284)
+	at java.awt.event.InvocationEvent.dispatch(Unknown Source)
+	at java.awt.EventQueue.dispatchEventImpl(Unknown Source)
+	at java.awt.EventQueue.access$500(Unknown Source)
+	at java.awt.EventQueue$3.run(Unknown Source)
+	at java.awt.EventQueue$3.run(Unknown Source)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(Unknown Source)
+	at java.awt.EventQueue.dispatchEvent(Unknown Source)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.run(Unknown Source)
+[INFO] [2019-11-04 15:40:28.000360][air.kanna.mystorage.StartUp.initData(StartUp.java:90)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[WARN] [2019-11-04 15:40:28.000365][air.kanna.kindlesync.config.impl.BaseFileConfigService.getConfig(BaseFileConfigService.java:41)] - propConfigFile is null, is a directory or is not exists
+[INFO] [2019-11-04 15:41:04.000162][air.kanna.mystorage.StartUp.initData(StartUp.java:90)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[WARN] [2019-11-04 15:41:04.000168][air.kanna.kindlesync.config.impl.BaseFileConfigService.getConfig(BaseFileConfigService.java:41)] - propConfigFile is null, is a directory or is not exists
+[INFO] [2019-11-04 15:41:46.000391][air.kanna.mystorage.dao.impl.sqlite.init.SqliteInitialize.initTables(SqliteInitialize.java:62)] - init tables: CREATE TABLE IF NOT EXISTS db_version (
+  version TEXT NOT NULL)
+[INFO] [2019-11-04 15:41:50.000476][air.kanna.mystorage.dao.impl.sqlite.init.SqliteInitialize.initTables(SqliteInitialize.java:62)] - init tables: 
+
+CREATE TABLE IF NOT EXISTS disk_description (
+  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  version TEXT NOT NULL,
+  base_path TEXT NOT NULL,
+  description TEXT,
+  last_update TEXT NOT NULL)
+[INFO] [2019-11-04 15:42:00.000789][air.kanna.mystorage.dao.impl.sqlite.init.SqliteInitialize.initTables(SqliteInitialize.java:62)] - init tables: 
+  
+CREATE TABLE IF NOT EXISTS file_list (
+  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  disk_id INTEGER NOT NULL,
+  file_name TEXT NOT NULL,
+  file_type INTEGER NOT NULL,
+  file_size INTEGER NOT NULL,
+  file_path TEXT NOT NULL,
+  
+  file_hash_01 TEXT,
+  file_hash_02 TEXT,
+  file_hash_03 TEXT,
+  
+  create_date INTEGER NOT NULL,
+  update_date INTEGER NOT NULL,
+  remark TEXT)
+[INFO] [2019-11-04 15:42:03.000416][air.kanna.mystorage.dao.impl.sqlite.init.SqliteInitialize.initTables(SqliteInitialize.java:62)] - init tables: 
+  
+CREATE INDEX file_list_idx01
+  ON file_list (disk_id)
+[INFO] [2019-11-04 15:42:06.000059][air.kanna.mystorage.dao.impl.sqlite.init.SqliteInitialize.initTables(SqliteInitialize.java:62)] - init tables: 
+  
+CREATE INDEX file_list_idx02
+  ON file_list (file_name)
+[INFO] [2019-11-04 15:42:09.000269][air.kanna.mystorage.dao.impl.sqlite.init.SqliteInitialize.initTables(SqliteInitialize.java:62)] - init tables: 
+  
+CREATE INDEX file_list_idx02
+  ON file_list (update_date)
+[ERROR] [2019-11-04 15:42:19.000339][air.kanna.mystorage.StartUp.initDB(StartUp.java:136)] - initDB error: 
+org.sqlite.SQLiteException: [SQLITE_ERROR] SQL error or missing database (index file_list_idx02 already exists)
+	at org.sqlite.core.DB.newSQLException(DB.java:941)
+	at org.sqlite.core.DB.newSQLException(DB.java:953)
+	at org.sqlite.core.DB.throwex(DB.java:918)
+	at org.sqlite.core.NativeDB.prepare_utf8(Native Method)
+	at org.sqlite.core.NativeDB.prepare(NativeDB.java:134)
+	at org.sqlite.core.DB.prepare(DB.java:257)
+	at org.sqlite.jdbc3.JDBC3Statement.execute(JDBC3Statement.java:52)
+	at air.kanna.mystorage.dao.impl.sqlite.init.SqliteInitialize.initTables(SqliteInitialize.java:63)
+	at air.kanna.mystorage.dao.impl.sqlite.init.SqliteInitialize.initAndGetConnection(SqliteInitialize.java:47)
+	at air.kanna.mystorage.StartUp.initDB(StartUp.java:124)
+	at air.kanna.mystorage.StartUp.initData(StartUp.java:115)
+	at air.kanna.mystorage.StartUp.<init>(StartUp.java:79)
+	at air.kanna.mystorage.StartUp$1.run(StartUp.java:285)
+	at java.awt.event.InvocationEvent.dispatch(Unknown Source)
+	at java.awt.EventQueue.dispatchEventImpl(Unknown Source)
+	at java.awt.EventQueue.access$500(Unknown Source)
+	at java.awt.EventQueue$3.run(Unknown Source)
+	at java.awt.EventQueue$3.run(Unknown Source)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(Unknown Source)
+	at java.awt.EventQueue.dispatchEvent(Unknown Source)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.run(Unknown Source)
+[INFO] [2019-11-04 15:43:33.000391][air.kanna.mystorage.StartUp.initData(StartUp.java:90)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[WARN] [2019-11-04 15:43:33.000396][air.kanna.kindlesync.config.impl.BaseFileConfigService.getConfig(BaseFileConfigService.java:41)] - propConfigFile is null, is a directory or is not exists
+[INFO] [2019-11-04 15:43:33.000674][air.kanna.mystorage.dao.impl.sqlite.init.SqliteInitialize.initTables(SqliteInitialize.java:62)] - init tables: CREATE TABLE IF NOT EXISTS db_version (
+  version TEXT NOT NULL)
+[INFO] [2019-11-04 15:43:33.000738][air.kanna.mystorage.dao.impl.sqlite.init.SqliteInitialize.initTables(SqliteInitialize.java:62)] - init tables: 
+
+CREATE TABLE IF NOT EXISTS disk_description (
+  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  version TEXT NOT NULL,
+  base_path TEXT NOT NULL,
+  description TEXT,
+  last_update TEXT NOT NULL)
+[INFO] [2019-11-04 15:43:33.000805][air.kanna.mystorage.dao.impl.sqlite.init.SqliteInitialize.initTables(SqliteInitialize.java:62)] - init tables: 
+  
+CREATE TABLE IF NOT EXISTS file_list (
+  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  disk_id INTEGER NOT NULL,
+  file_name TEXT NOT NULL,
+  file_type INTEGER NOT NULL,
+  file_size INTEGER NOT NULL,
+  file_path TEXT NOT NULL,
+  
+  file_hash_01 TEXT,
+  file_hash_02 TEXT,
+  file_hash_03 TEXT,
+  
+  create_date INTEGER NOT NULL,
+  update_date INTEGER NOT NULL,
+  remark TEXT)
+[INFO] [2019-11-04 15:43:33.000856][air.kanna.mystorage.dao.impl.sqlite.init.SqliteInitialize.initTables(SqliteInitialize.java:62)] - init tables: 
+  
+CREATE INDEX file_list_idx01
+  ON file_list (disk_id)
+[INFO] [2019-11-04 15:43:33.000923][air.kanna.mystorage.dao.impl.sqlite.init.SqliteInitialize.initTables(SqliteInitialize.java:62)] - init tables: 
+  
+CREATE INDEX file_list_idx02
+  ON file_list (file_name)
+[INFO] [2019-11-04 15:43:33.000983][air.kanna.mystorage.dao.impl.sqlite.init.SqliteInitialize.initTables(SqliteInitialize.java:62)] - init tables: 
+  
+CREATE INDEX file_list_idx03
+  ON file_list (update_date)
+[INFO] [2019-11-04 15:43:34.000039][air.kanna.mystorage.dao.impl.sqlite.init.SqliteInitialize.initTables(SqliteInitialize.java:62)] - init tables: 
+  
+  
+
+[ERROR] [2019-11-04 15:43:34.000040][air.kanna.mystorage.StartUp.initDB(StartUp.java:136)] - initDB error: 
+java.sql.SQLException: The prepared statement has been finalized
+	at org.sqlite.core.NativeDB.throwex(NativeDB.java:478)
+	at org.sqlite.core.NativeDB.step(Native Method)
+	at org.sqlite.core.DB.execute(DB.java:842)
+	at org.sqlite.core.CoreStatement.exec(CoreStatement.java:80)
+	at org.sqlite.jdbc3.JDBC3Statement.execute(JDBC3Statement.java:53)
+	at air.kanna.mystorage.dao.impl.sqlite.init.SqliteInitialize.initTables(SqliteInitialize.java:63)
+	at air.kanna.mystorage.dao.impl.sqlite.init.SqliteInitialize.initAndGetConnection(SqliteInitialize.java:47)
+	at air.kanna.mystorage.StartUp.initDB(StartUp.java:124)
+	at air.kanna.mystorage.StartUp.initData(StartUp.java:115)
+	at air.kanna.mystorage.StartUp.<init>(StartUp.java:79)
+	at air.kanna.mystorage.StartUp$1.run(StartUp.java:285)
+	at java.awt.event.InvocationEvent.dispatch(Unknown Source)
+	at java.awt.EventQueue.dispatchEventImpl(Unknown Source)
+	at java.awt.EventQueue.access$500(Unknown Source)
+	at java.awt.EventQueue$3.run(Unknown Source)
+	at java.awt.EventQueue$3.run(Unknown Source)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(Unknown Source)
+	at java.awt.EventQueue.dispatchEvent(Unknown Source)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.run(Unknown Source)
+[INFO] [2019-11-04 15:44:19.000145][air.kanna.mystorage.StartUp.initData(StartUp.java:90)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[WARN] [2019-11-04 15:44:19.000149][air.kanna.kindlesync.config.impl.BaseFileConfigService.getConfig(BaseFileConfigService.java:41)] - propConfigFile is null, is a directory or is not exists
+[INFO] [2019-11-04 15:44:19.000430][air.kanna.mystorage.dao.impl.sqlite.init.SqliteInitialize.initTables(SqliteInitialize.java:62)] - init tables: CREATE TABLE IF NOT EXISTS db_version (
+  version TEXT NOT NULL)
+[INFO] [2019-11-04 15:44:19.000491][air.kanna.mystorage.dao.impl.sqlite.init.SqliteInitialize.initTables(SqliteInitialize.java:62)] - init tables: 
+
+CREATE TABLE IF NOT EXISTS disk_description (
+  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  version TEXT NOT NULL,
+  base_path TEXT NOT NULL,
+  description TEXT,
+  last_update TEXT NOT NULL)
+[INFO] [2019-11-04 15:44:19.000550][air.kanna.mystorage.dao.impl.sqlite.init.SqliteInitialize.initTables(SqliteInitialize.java:62)] - init tables: 
+  
+CREATE TABLE IF NOT EXISTS file_list (
+  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  disk_id INTEGER NOT NULL,
+  file_name TEXT NOT NULL,
+  file_type INTEGER NOT NULL,
+  file_size INTEGER NOT NULL,
+  file_path TEXT NOT NULL,
+  
+  file_hash_01 TEXT,
+  file_hash_02 TEXT,
+  file_hash_03 TEXT,
+  
+  create_date INTEGER NOT NULL,
+  update_date INTEGER NOT NULL,
+  remark TEXT)
+[INFO] [2019-11-04 15:44:19.000618][air.kanna.mystorage.dao.impl.sqlite.init.SqliteInitialize.initTables(SqliteInitialize.java:62)] - init tables: 
+  
+CREATE INDEX file_list_idx01
+  ON file_list (disk_id)
+[INFO] [2019-11-04 15:44:19.000669][air.kanna.mystorage.dao.impl.sqlite.init.SqliteInitialize.initTables(SqliteInitialize.java:62)] - init tables: 
+  
+CREATE INDEX file_list_idx02
+  ON file_list (file_name)
+[INFO] [2019-11-04 15:44:19.000718][air.kanna.mystorage.dao.impl.sqlite.init.SqliteInitialize.initTables(SqliteInitialize.java:62)] - init tables: 
+  
+CREATE INDEX file_list_idx03
+  ON file_list (update_date)
+[INFO] [2019-11-04 15:44:19.000768][air.kanna.mystorage.dao.impl.sqlite.init.SqliteInitialize.initTables(SqliteInitialize.java:62)] - init tables: 
+
+[ERROR] [2019-11-04 15:44:19.000769][air.kanna.mystorage.StartUp.initDB(StartUp.java:136)] - initDB error: 
+java.sql.SQLException: The prepared statement has been finalized
+	at org.sqlite.core.NativeDB.throwex(NativeDB.java:478)
+	at org.sqlite.core.NativeDB.step(Native Method)
+	at org.sqlite.core.DB.execute(DB.java:842)
+	at org.sqlite.core.CoreStatement.exec(CoreStatement.java:80)
+	at org.sqlite.jdbc3.JDBC3Statement.execute(JDBC3Statement.java:53)
+	at air.kanna.mystorage.dao.impl.sqlite.init.SqliteInitialize.initTables(SqliteInitialize.java:63)
+	at air.kanna.mystorage.dao.impl.sqlite.init.SqliteInitialize.initAndGetConnection(SqliteInitialize.java:47)
+	at air.kanna.mystorage.StartUp.initDB(StartUp.java:124)
+	at air.kanna.mystorage.StartUp.initData(StartUp.java:115)
+	at air.kanna.mystorage.StartUp.<init>(StartUp.java:79)
+	at air.kanna.mystorage.StartUp$1.run(StartUp.java:285)
+	at java.awt.event.InvocationEvent.dispatch(Unknown Source)
+	at java.awt.EventQueue.dispatchEventImpl(Unknown Source)
+	at java.awt.EventQueue.access$500(Unknown Source)
+	at java.awt.EventQueue$3.run(Unknown Source)
+	at java.awt.EventQueue$3.run(Unknown Source)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(Unknown Source)
+	at java.awt.EventQueue.dispatchEvent(Unknown Source)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.run(Unknown Source)
+[INFO] [2019-11-04 15:45:11.000780][air.kanna.mystorage.StartUp.initData(StartUp.java:90)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[WARN] [2019-11-04 15:45:11.000784][air.kanna.kindlesync.config.impl.BaseFileConfigService.getConfig(BaseFileConfigService.java:41)] - propConfigFile is null, is a directory or is not exists
+[INFO] [2019-11-04 15:45:12.000059][air.kanna.mystorage.dao.impl.sqlite.init.SqliteInitialize.initTables(SqliteInitialize.java:62)] - init tables: CREATE TABLE IF NOT EXISTS db_version (
+  version TEXT NOT NULL)
+[INFO] [2019-11-04 15:45:12.000118][air.kanna.mystorage.dao.impl.sqlite.init.SqliteInitialize.initTables(SqliteInitialize.java:62)] - init tables: 
+
+CREATE TABLE IF NOT EXISTS disk_description (
+  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  version TEXT NOT NULL,
+  base_path TEXT NOT NULL,
+  description TEXT,
+  last_update TEXT NOT NULL)
+[INFO] [2019-11-04 15:45:12.000193][air.kanna.mystorage.dao.impl.sqlite.init.SqliteInitialize.initTables(SqliteInitialize.java:62)] - init tables: 
+  
+CREATE TABLE IF NOT EXISTS file_list (
+  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  disk_id INTEGER NOT NULL,
+  file_name TEXT NOT NULL,
+  file_type INTEGER NOT NULL,
+  file_size INTEGER NOT NULL,
+  file_path TEXT NOT NULL,
+  
+  file_hash_01 TEXT,
+  file_hash_02 TEXT,
+  file_hash_03 TEXT,
+  
+  create_date INTEGER NOT NULL,
+  update_date INTEGER NOT NULL,
+  remark TEXT)
+[INFO] [2019-11-04 15:45:12.000250][air.kanna.mystorage.dao.impl.sqlite.init.SqliteInitialize.initTables(SqliteInitialize.java:62)] - init tables: 
+  
+CREATE INDEX file_list_idx01
+  ON file_list (disk_id)
+[INFO] [2019-11-04 15:45:12.000302][air.kanna.mystorage.dao.impl.sqlite.init.SqliteInitialize.initTables(SqliteInitialize.java:62)] - init tables: 
+  
+CREATE INDEX file_list_idx02
+  ON file_list (file_name)
+[INFO] [2019-11-04 15:45:12.000377][air.kanna.mystorage.dao.impl.sqlite.init.SqliteInitialize.initTables(SqliteInitialize.java:62)] - init tables: 
+  
+CREATE INDEX file_list_idx03
+  ON file_list (update_date)
+[INFO] [2019-11-04 15:45:12.000506][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[INFO] [2019-11-08 15:07:30.000844][air.kanna.mystorage.StartUp.initData(StartUp.java:179)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[WARN] [2019-11-08 15:07:30.000861][air.kanna.kindlesync.config.impl.BaseFileConfigService.getConfig(BaseFileConfigService.java:41)] - propConfigFile is null, is a directory or is not exists
+[INFO] [2019-11-08 15:07:31.000201][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[INFO] [2019-11-08 15:10:38.000379][air.kanna.mystorage.StartUp.initData(StartUp.java:180)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[WARN] [2019-11-08 15:10:38.000385][air.kanna.kindlesync.config.impl.BaseFileConfigService.getConfig(BaseFileConfigService.java:41)] - propConfigFile is null, is a directory or is not exists
+[INFO] [2019-11-08 15:10:38.000698][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[INFO] [2019-11-08 15:10:58.000839][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO disk_description(version, base_path, description, last_update)  VALUES( '1.0.0', 'D:\迅雷下载', 'D:\迅雷下载', '2019-11-08 15:10:58')
+[INFO] [2019-11-08 15:10:58.000909][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[INFO] [2019-11-08 15:18:34.000060][air.kanna.mystorage.StartUp.initData(StartUp.java:191)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[WARN] [2019-11-08 15:18:34.000066][air.kanna.kindlesync.config.impl.BaseFileConfigService.getConfig(BaseFileConfigService.java:41)] - propConfigFile is null, is a directory or is not exists
+[INFO] [2019-11-08 15:18:34.000378][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[INFO] [2019-11-08 15:18:44.000590][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.deleteByCondition(FileItemDAOSqliteImpl.java:120)] -  DELETE FROM file_list WHERE 1 = 1  AND disk_id = 1
+[INFO] [2019-11-08 15:18:44.000592][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 1, '9cf7d13c65074a048b99261da2e6a176.bin', 70, 1197964597, '\9cf7d13c65074a048b99261da2e6a176.bin', '', '', '', 20190905090640, 20190905122719, '')
+[INFO] [2019-11-08 15:18:44.000675][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 1, 'CentOS-7-x86_64-DVD-1810.iso', 70, 4588568576, '\CentOS-7-x86_64-DVD-1810.iso', '', '', '', 20190513163817, 20190513233801, '')
+[INFO] [2019-11-08 15:18:44.000752][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 1, 'CF7DA7AB4D4E6125567BD979994F13BB1F23DDDD.torrent', 70, 76500, '\CF7DA7AB4D4E6125567BD979994F13BB1F23DDDD.torrent', '', '', '', 20190515160903, 20190515160903, '')
+[INFO] [2019-11-08 15:18:44.000817][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 1, 'CuteMIDI.exe', 70, 7510437, '\CuteMIDI.exe', '', '', '', 20190315095443, 20160902211008, '')
+[INFO] [2019-11-08 15:18:44.000885][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 1, 'CuteMIDI.zip', 70, 6930156, '\CuteMIDI.zip', '', '', '', 20190315095420, 20190315095422, '')
+[INFO] [2019-11-08 15:18:44.000959][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 1, 'eclipse-inst-win64.exe', 70, 51108160, '\eclipse-inst-win64.exe', '', '', '', 20190307172116, 20190307172109, '')
+[INFO] [2019-11-08 15:18:45.000035][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 1, 'eclipse-jee-2018-12-R-win32-x86_64 (1).zip', 70, 21553, '\eclipse-jee-2018-12-R-win32-x86_64 (1).zip', '', '', '', 20190307152250, 20190307152305, '')
+[INFO] [2019-11-08 15:18:45.000110][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 1, 'extension-functions.c', 70, 51538, '\extension-functions.c', '', '', '', 20190909110424, 20190321060112, '')
+[INFO] [2019-11-08 15:18:45.000185][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 1, 'GitExtensions-3.0.2.5232.msi', 70, 17489920, '\GitExtensions-3.0.2.5232.msi', '', '', '', 20190509173533, 20190510171618, '')
+[INFO] [2019-11-08 15:18:45.000269][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 1, 'GitExtensions-3.00.00.4433.msi', 70, 15654912, '\GitExtensions-3.00.00.4433.msi', '', '', '', 20190218173320, 20190218173446, '')
+[INFO] [2019-11-08 15:18:45.000352][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 1, 'KDiff3', 68, 0, '\KDiff3', '', '', '', 20190306090344, 20190306090422, '')
+[INFO] [2019-11-08 15:18:45.000427][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 1, 'KDiff3-32bit-Setup_0.9.98-3.exe', 70, 11413841, '\KDiff3\KDiff3-32bit-Setup_0.9.98-3.exe', '', '', '', 20190306090344, 20140909025832, '')
+[INFO] [2019-11-08 15:18:45.000500][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 1, 'KDiff3-64bit-Setup_0.9.98-2.exe', 70, 11517943, '\KDiff3\KDiff3-64bit-Setup_0.9.98-2.exe', '', '', '', 20190306090344, 20140909025000, '')
+[INFO] [2019-11-08 15:18:45.000558][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 1, 'mysql-workbench-community-8.0.15-winx64.msi', 70, 34975744, '\mysql-workbench-community-8.0.15-winx64.msi', '', '', '', 20190220112119, 20190220112150, '')
+[INFO] [2019-11-08 15:18:45.000627][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 1, 'office破解KMSAuto.zip', 70, 5854305, '\office破解KMSAuto.zip', '', '', '', 20190910145711, 20170428214531, '')
+[INFO] [2019-11-08 15:18:45.000717][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 1, 'Overture.zip', 70, 269501414, '\Overture.zip', '', '', '', 20190402163858, 20190513171942, '')
+[INFO] [2019-11-08 15:18:45.000785][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 1, 'Overture_5.exe', 70, 269563766, '\Overture_5.exe', '', '', '', 20190513172033, 20181109114154, '')
+[INFO] [2019-11-08 15:18:45.000868][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 1, 'python-2.7.12.amd64.msi', 70, 19820544, '\python-2.7.12.amd64.msi', '', '', '', 20190306172247, 20190306172304, '')
+[INFO] [2019-11-08 15:18:45.000944][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 1, 'sqlite-jdbc-3.27.2.1.jar', 70, 6012107, '\sqlite-jdbc-3.27.2.1.jar', '', '', '', 20190909094842, 20190909095040, '')
+[INFO] [2019-11-08 15:18:46.000009][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 1, 'Sublime Text Build 3176 x64 Setup.exe', 70, 9142656, '\Sublime Text Build 3176 x64 Setup.exe', '', '', '', 20190219093500, 20190219094715, '')
+[INFO] [2019-11-08 15:18:46.000086][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 1, 'SW_DVD5_Project_Pro_2016_64Bit_ChnSimp_MLF_X20-42676.ISO', 70, 647157760, '\SW_DVD5_Project_Pro_2016_64Bit_ChnSimp_MLF_X20-42676.ISO', '', '', '', 20190910145712, 20180308103327, '')
+[INFO] [2019-11-08 15:18:46.000168][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 1, 'SW_DVD5_Visio_Pro_2013_64Bit_ChnSimp_MLF_X18-61013.ISO', 70, 589129728, '\SW_DVD5_Visio_Pro_2013_64Bit_ChnSimp_MLF_X18-61013.ISO', '', '', '', 20190910145717, 20180308155453, '')
+[INFO] [2019-11-08 15:18:46.000243][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 1, 'ubuntu-18.04.2-desktop-amd64.iso', 70, 1996488704, '\ubuntu-18.04.2-desktop-amd64.iso', '', '', '', 20190515160903, 20190515195307, '')
+[INFO] [2019-11-08 15:18:46.000327][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 1, 'ubuntu-18.04.2-live-server-amd64.iso', 70, 874512384, '\ubuntu-18.04.2-live-server-amd64.iso', '', '', '', 20190515141915, 20190514151546, '')
+[INFO] [2019-11-08 15:18:46.000392][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 1, 'ultraedit21.zip', 70, 31629861, '\ultraedit21.zip', '', '', '', 20190419170526, 20190419171035, '')
+[INFO] [2019-11-08 15:18:46.000469][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 1, 'vc_redist.x64.exe', 70, 14572000, '\vc_redist.x64.exe', '', '', '', 20190220112405, 20190220112411, '')
+[INFO] [2019-11-08 15:20:19.000487][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO disk_description(version, base_path, description, last_update)  VALUES( '1.0.0', 'D:\KindleO小说', 'D:\KindleO小说', '2019-11-08 15:20:19')
+[INFO] [2019-11-08 15:20:19.000566][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[INFO] [2019-11-08 15:20:19.000844][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.deleteByCondition(FileItemDAOSqliteImpl.java:120)] -  DELETE FROM file_list WHERE 1 = 1  AND disk_id = 2
+[INFO] [2019-11-08 15:20:19.000844][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '29岁单身汉在异世界想自由生活却事与愿违！？', 68, 4096, '\29岁单身汉在异世界想自由生活却事与愿违！？', '', '', '', 20191011171954, 20191011171954, '')
+[INFO] [2019-11-08 15:20:19.000916][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '29岁单身汉在异世界想自由生活却事与愿违！？001.txt', 70, 340544, '\29岁单身汉在异世界想自由生活却事与愿违！？\29岁单身汉在异世界想自由生活却事与愿违！？001.txt', '', '', '', 20191011171954, 20161015232726, '')
+[INFO] [2019-11-08 15:20:19.000991][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '29岁单身汉在异世界想自由生活却事与愿违！？002.txt', 70, 343678, '\29岁单身汉在异世界想自由生活却事与愿违！？\29岁单身汉在异世界想自由生活却事与愿违！？002.txt', '', '', '', 20191011171954, 20170312214604, '')
+[INFO] [2019-11-08 15:20:20.000065][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '29岁单身汉在异世界想自由生活却事与愿违！？003.txt', 70, 270550, '\29岁单身汉在异世界想自由生活却事与愿违！？\29岁单身汉在异世界想自由生活却事与愿违！？003.txt', '', '', '', 20191011171954, 20170611004750, '')
+[INFO] [2019-11-08 15:20:20.000131][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '29岁单身汉在异世界想自由生活却事与愿违！？004.txt', 70, 257858, '\29岁单身汉在异世界想自由生活却事与愿违！？\29岁单身汉在异世界想自由生活却事与愿违！？004.txt', '', '', '', 20191011171954, 20171014235148, '')
+[INFO] [2019-11-08 15:20:20.000199][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '29岁单身汉在异世界想自由生活却事与愿违！？005.txt', 70, 337838, '\29岁单身汉在异世界想自由生活却事与愿违！？\29岁单身汉在异世界想自由生活却事与愿违！？005.txt', '', '', '', 20191011171954, 20180601154420, '')
+[INFO] [2019-11-08 15:20:20.000266][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '29岁单身汉在异世界想自由生活却事与愿违！？006.txt', 70, 304315, '\29岁单身汉在异世界想自由生活却事与愿违！？\29岁单身汉在异世界想自由生活却事与愿违！？006.txt', '', '', '', 20191011171954, 20180930104246, '')
+[INFO] [2019-11-08 15:20:20.000341][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '29岁单身汉在异世界想自由生活却事与愿违！？007.txt', 70, 289933, '\29岁单身汉在异世界想自由生活却事与愿违！？\29岁单身汉在异世界想自由生活却事与愿违！？007.txt', '', '', '', 20191011171954, 20190104162052, '')
+[INFO] [2019-11-08 15:20:20.000433][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '29岁单身汉在异世界想自由生活却事与愿违！？008.txt', 70, 282964, '\29岁单身汉在异世界想自由生活却事与愿违！？\29岁单身汉在异世界想自由生活却事与愿违！？008.txt', '', '', '', 20191011171954, 20191011171918, '')
+[INFO] [2019-11-08 15:20:20.000499][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '29岁单身汉在异世界想自由生活却事与愿违！？009.txt', 70, 318618, '\29岁单身汉在异世界想自由生活却事与愿违！？\29岁单身汉在异世界想自由生活却事与愿违！？009.txt', '', '', '', 20191011171954, 20191011171934, '')
+[INFO] [2019-11-08 15:20:20.000566][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '86-不存在的战区-', 68, 4096, '\86-不存在的战区-', '', '', '', 20191021141340, 20191021141626, '')
+[INFO] [2019-11-08 15:20:20.000641][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '86-不存在的战区-001.txt', 70, 446420, '\86-不存在的战区-\86-不存在的战区-001.txt', '', '', '', 20191021141336, 20191021141336, '')
+[INFO] [2019-11-08 15:20:20.000716][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '86-不存在的战区-002-Run through the battlefront-上.txt', 70, 332573, '\86-不存在的战区-\86-不存在的战区-002-Run through the battlefront-上.txt', '', '', '', 20191021141506, 20191021141506, '')
+[INFO] [2019-11-08 15:20:20.000790][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '86-不存在的战区-003-Run through the battlefront-下.txt', 70, 395444, '\86-不存在的战区-\86-不存在的战区-003-Run through the battlefront-下.txt', '', '', '', 20191021141529, 20191021141529, '')
+[INFO] [2019-11-08 15:20:20.000857][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '86-不存在的战区-004-Under pressure.txt', 70, 374507, '\86-不存在的战区-\86-不存在的战区-004-Under pressure.txt', '', '', '', 20191021141442, 20191021141442, '')
+[INFO] [2019-11-08 15:20:20.000940][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '86-不存在的战区-005-死神，你莫骄傲.txt', 70, 462040, '\86-不存在的战区-\86-不存在的战区-005-死神，你莫骄傲.txt', '', '', '', 20191021141605, 20191021141605, '')
+[INFO] [2019-11-08 15:20:21.000016][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '86-不存在的战区-S01.txt', 70, 186815, '\86-不存在的战区-\86-不存在的战区-S01.txt', '', '', '', 20191021141616, 20191021141616, '')
+[INFO] [2019-11-08 15:20:21.000091][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, 'Fairy Tale 幻想编年史～不懂察言观色的异世界生活～', 68, 4096, '\Fairy Tale 幻想编年史～不懂察言观色的异世界生活～', '', '', '', 20191014144556, 20191014144654, '')
+[INFO] [2019-11-08 15:20:21.000173][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, 'Fairy Tale 幻想编年史～不懂察言观色的异世界生活～001.txt', 70, 408938, '\Fairy Tale 幻想编年史～不懂察言观色的异世界生活～\Fairy Tale 幻想编年史～不懂察言观色的异世界生活～001.txt', '', '', '', 20191014144556, 20160710001424, '')
+[INFO] [2019-11-08 15:20:21.000249][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, 'Fairy Tale 幻想编年史～不懂察言观色的异世界生活～002.txt', 70, 414494, '\Fairy Tale 幻想编年史～不懂察言观色的异世界生活～\Fairy Tale 幻想编年史～不懂察言观色的异世界生活～002.txt', '', '', '', 20191014144556, 20160710001432, '')
+[INFO] [2019-11-08 15:20:21.000324][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, 'Fairy Tale 幻想编年史～不懂察言观色的异世界生活～003.txt', 70, 409382, '\Fairy Tale 幻想编年史～不懂察言观色的异世界生活～\Fairy Tale 幻想编年史～不懂察言观色的异世界生活～003.txt', '', '', '', 20191014144556, 20160910233406, '')
+[INFO] [2019-11-08 15:20:21.000399][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, 'Fairy Tale 幻想编年史～不懂察言观色的异世界生活～004.txt', 70, 441243, '\Fairy Tale 幻想编年史～不懂察言观色的异世界生活～\Fairy Tale 幻想编年史～不懂察言观色的异世界生活～004.txt', '', '', '', 20191014144556, 20160913004004, '')
+[INFO] [2019-11-08 15:20:21.000491][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, 'Fairy Tale 幻想编年史～不懂察言观色的异世界生活～005.txt', 70, 430357, '\Fairy Tale 幻想编年史～不懂察言观色的异世界生活～\Fairy Tale 幻想编年史～不懂察言观色的异世界生活～005.txt', '', '', '', 20191014144556, 20170624220210, '')
+[INFO] [2019-11-08 15:20:21.000565][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, 'Fairy Tale 幻想编年史～不懂察言观色的异世界生活～006.txt', 70, 450645, '\Fairy Tale 幻想编年史～不懂察言观色的异世界生活～\Fairy Tale 幻想编年史～不懂察言观色的异世界生活～006.txt', '', '', '', 20191014144556, 20170729230344, '')
+[INFO] [2019-11-08 15:20:21.000640][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, 'Fairy Tale 幻想编年史～不懂察言观色的异世界生活～007.txt', 70, 449421, '\Fairy Tale 幻想编年史～不懂察言观色的异世界生活～\Fairy Tale 幻想编年史～不懂察言观色的异世界生活～007.txt', '', '', '', 20191014144646, 20191014144646, '')
+[INFO] [2019-11-08 15:20:21.000707][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, 'LV999的村民', 68, 0, '\LV999的村民', '', '', '', 20191012103536, 20191012103544, '')
+[INFO] [2019-11-08 15:20:21.000782][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, 'LV999的村民001.txt', 70, 473791, '\LV999的村民\LV999的村民001.txt', '', '', '', 20191012103536, 20180930104846, '')
+[INFO] [2019-11-08 15:20:21.000865][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, 'LV999的村民002.txt', 70, 471125, '\LV999的村民\LV999的村民002.txt', '', '', '', 20191012103536, 20180930104900, '')
+[INFO] [2019-11-08 15:20:21.000940][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, 'LV999的村民003.txt', 70, 459989, '\LV999的村民\LV999的村民003.txt', '', '', '', 20191012103536, 20190423122214, '')
+[INFO] [2019-11-08 15:20:22.000024][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, 'LV999的村民004.txt', 70, 363884, '\LV999的村民\LV999的村民004.txt', '', '', '', 20191012103536, 20190714163316, '')
+[INFO] [2019-11-08 15:20:22.000099][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, 'LV999的村民005.txt', 70, 383545, '\LV999的村民\LV999的村民005.txt', '', '', '', 20191012103521, 20191012103521, '')
+[INFO] [2019-11-08 15:20:22.000174][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '与佐伯同学同住一个屋簷下', 68, 0, '\与佐伯同学同住一个屋簷下', '', '', '', 20191014144104, 20191014144202, '')
+[INFO] [2019-11-08 15:20:22.000257][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '与佐伯同学同住一个屋簷下001.txt', 70, 248335, '\与佐伯同学同住一个屋簷下\与佐伯同学同住一个屋簷下001.txt', '', '', '', 20191014144104, 20180316234620, '')
+[INFO] [2019-11-08 15:20:22.000340][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '与佐伯同学同住一个屋簷下002.txt', 70, 310655, '\与佐伯同学同住一个屋簷下\与佐伯同学同住一个屋簷下002.txt', '', '', '', 20191014144104, 20180316234636, '')
+[INFO] [2019-11-08 15:20:22.000415][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '与佐伯同学同住一个屋簷下003.txt', 70, 310793, '\与佐伯同学同住一个屋簷下\与佐伯同学同住一个屋簷下003.txt', '', '', '', 20191014144104, 20190103161332, '')
+[INFO] [2019-11-08 15:20:22.000482][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '与佐伯同学同住一个屋簷下004.txt', 70, 258066, '\与佐伯同学同住一个屋簷下\与佐伯同学同住一个屋簷下004.txt', '', '', '', 20191014144157, 20191014144157, '')
+[INFO] [2019-11-08 15:20:22.000566][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '交叉连结', 68, 0, '\交叉连结', '', '', '', 20191014145111, 20191014145334, '')
+[INFO] [2019-11-08 15:20:22.000648][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '交叉连结001-与电脑神姬春风的互换身体完全游戏攻略.txt', 70, 357889, '\交叉连结\交叉连结001-与电脑神姬春风的互换身体完全游戏攻略.txt', '', '', '', 20191014145136, 20181211161408, '')
+[INFO] [2019-11-08 15:20:22.000732][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '交叉连结002-与电脑神姬铃夏的互换身体完全游戏攻略.txt', 70, 345011, '\交叉连结\交叉连结002-与电脑神姬铃夏的互换身体完全游戏攻略.txt', '', '', '', 20191014145319, 20191014145319, '')
+[INFO] [2019-11-08 15:20:22.000807][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '你与我最后的战场，亦或是世界起始的圣战', 68, 4096, '\你与我最后的战场，亦或是世界起始的圣战', '', '', '', 20191014162853, 20191014162901, '')
+[INFO] [2019-11-08 15:20:22.000866][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '你与我最后的战场，亦或是世界起始的圣战001.txt', 70, 324134, '\你与我最后的战场，亦或是世界起始的圣战\你与我最后的战场，亦或是世界起始的圣战001.txt', '', '', '', 20191014162853, 20191014162818, '')
+[INFO] [2019-11-08 15:20:22.000932][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '你与我最后的战场，亦或是世界起始的圣战002.txt', 70, 319379, '\你与我最后的战场，亦或是世界起始的圣战\你与我最后的战场，亦或是世界起始的圣战002.txt', '', '', '', 20191014162853, 20191014162751, '')
+[INFO] [2019-11-08 15:20:23.000007][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '你与我最后的战场，亦或是世界起始的圣战003.txt', 70, 270456, '\你与我最后的战场，亦或是世界起始的圣战\你与我最后的战场，亦或是世界起始的圣战003.txt', '', '', '', 20191014162853, 20180531101732, '')
+[INFO] [2019-11-08 15:20:23.000090][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '你与我最后的战场，亦或是世界起始的圣战004.txt', 70, 273133, '\你与我最后的战场，亦或是世界起始的圣战\你与我最后的战场，亦或是世界起始的圣战004.txt', '', '', '', 20191014162853, 20180531101744, '')
+[INFO] [2019-11-08 15:20:23.000165][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '你与我最后的战场，亦或是世界起始的圣战005.txt', 70, 271940, '\你与我最后的战场，亦或是世界起始的圣战\你与我最后的战场，亦或是世界起始的圣战005.txt', '', '', '', 20191014162853, 20181113194804, '')
+[INFO] [2019-11-08 15:20:23.000249][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '你与我最后的战场，亦或是世界起始的圣战006.txt', 70, 305708, '\你与我最后的战场，亦或是世界起始的圣战\你与我最后的战场，亦或是世界起始的圣战006.txt', '', '', '', 20191014162853, 20190107170716, '')
+[INFO] [2019-11-08 15:20:23.000324][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '你与我最后的战场，亦或是世界起始的圣战007.txt', 70, 224438, '\你与我最后的战场，亦或是世界起始的圣战\你与我最后的战场，亦或是世界起始的圣战007.txt', '', '', '', 20191014162901, 20191014162736, '')
+[INFO] [2019-11-08 15:20:23.000390][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '你与我最后的战场，亦或是世界起始的圣战S01.txt', 70, 293191, '\你与我最后的战场，亦或是世界起始的圣战\你与我最后的战场，亦或是世界起始的圣战S01.txt', '', '', '', 20191014162853, 20190107170728, '')
+[INFO] [2019-11-08 15:20:23.000465][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '全肯定奴隶少女', 68, 0, '\全肯定奴隶少女', '', '', '', 20191021114947, 20191021114955, '')
+[INFO] [2019-11-08 15:20:23.000549][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '全肯定奴隶少女001-1次10分钟1000元.txt', 70, 301271, '\全肯定奴隶少女\全肯定奴隶少女001-1次10分钟1000元.txt', '', '', '', 20191021114933, 20191021114933, '')
+[INFO] [2019-11-08 15:20:23.000641][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '八男？别闹了！', 68, 4096, '\八男？别闹了！', '', '', '', 20191011172140, 20191011172140, '')
+[INFO] [2019-11-08 15:20:23.000707][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '八男？別鬧了！009.txt', 70, 387484, '\八男？别闹了！\八男？別鬧了！009.txt', '', '', '', 20191011172140, 20171224233800, '')
+[INFO] [2019-11-08 15:20:23.000782][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '八男？别闹了！001.txt', 70, 357761, '\八男？别闹了！\八男？别闹了！001.txt', '', '', '', 20191011172140, 20160928221412, '')
+[INFO] [2019-11-08 15:20:23.000882][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '八男？别闹了！002.txt', 70, 347499, '\八男？别闹了！\八男？别闹了！002.txt', '', '', '', 20191011172140, 20160928221606, '')
+[INFO] [2019-11-08 15:20:23.000974][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '八男？别闹了！003.txt', 70, 341033, '\八男？别闹了！\八男？别闹了！003.txt', '', '', '', 20191011172140, 20160928221638, '')
+[INFO] [2019-11-08 15:20:24.000055][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '八男？别闹了！004.txt', 70, 388709, '\八男？别闹了！\八男？别闹了！004.txt', '', '', '', 20191011172140, 20160928221700, '')
+[INFO] [2019-11-08 15:20:24.000132][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '八男？别闹了！005.txt', 70, 333236, '\八男？别闹了！\八男？别闹了！005.txt', '', '', '', 20191011172140, 20160928221718, '')
+[INFO] [2019-11-08 15:20:24.000215][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '八男？别闹了！006.txt', 70, 329073, '\八男？别闹了！\八男？别闹了！006.txt', '', '', '', 20191011172140, 20161127212756, '')
+[INFO] [2019-11-08 15:20:24.000299][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '八男？别闹了！007.txt', 70, 373408, '\八男？别闹了！\八男？别闹了！007.txt', '', '', '', 20191011172140, 20170129011812, '')
+[INFO] [2019-11-08 15:20:24.000399][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '八男？别闹了！008.txt', 70, 389509, '\八男？别闹了！\八男？别闹了！008.txt', '', '', '', 20191011172140, 20170203234030, '')
+[INFO] [2019-11-08 15:20:24.000490][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '八男？别闹了！009.txt', 70, 399290, '\八男？别闹了！\八男？别闹了！009.txt', '', '', '', 20191011172140, 20170624225636, '')
+[INFO] [2019-11-08 15:20:24.000582][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '八男？别闹了！010.txt', 70, 408796, '\八男？别闹了！\八男？别闹了！010.txt', '', '', '', 20191011172140, 20181128164002, '')
+[INFO] [2019-11-08 15:20:24.000674][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '八男？别闹了！011.txt', 70, 384658, '\八男？别闹了！\八男？别闹了！011.txt', '', '', '', 20191011172140, 20181128164020, '')
+[INFO] [2019-11-08 15:20:24.000757][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '八男？别闹了！012.txt', 70, 376149, '\八男？别闹了！\八男？别闹了！012.txt', '', '', '', 20191011172140, 20191011172102, '')
+[INFO] [2019-11-08 15:20:24.000857][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '八男？别闹了！013.txt', 70, 394174, '\八男？别闹了！\八男？别闹了！013.txt', '', '', '', 20191011172140, 20191011172123, '')
+[INFO] [2019-11-08 15:20:24.000948][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '口是心非的冰室同学', 68, 0, '\口是心非的冰室同学', '', '', '', 20191012102825, 20191012102837, '')
+[INFO] [2019-11-08 15:20:25.000040][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '口是心非的冰室同学001.txt', 70, 319787, '\口是心非的冰室同学\口是心非的冰室同学001.txt', '', '', '', 20191012102750, 20191012102750, '')
+[INFO] [2019-11-08 15:20:25.000124][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '口是心非的冰室同学002.txt', 70, 311711, '\口是心非的冰室同学\口是心非的冰室同学002.txt', '', '', '', 20191012102803, 20191012102803, '')
+[INFO] [2019-11-08 15:20:25.000207][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '周末冒险者', 68, 0, '\周末冒险者', '', '', '', 20191011172246, 20191011172246, '')
+[INFO] [2019-11-08 15:20:25.000298][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '周末冒险者001.txt', 70, 420505, '\周末冒险者\周末冒险者001.txt', '', '', '', 20191011172246, 20190610190818, '')
+[INFO] [2019-11-08 15:20:25.000382][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '周末冒险者002.txt', 70, 432685, '\周末冒险者\周末冒险者002.txt', '', '', '', 20191011172246, 20191011172233, '')
+[INFO] [2019-11-08 15:20:25.000472][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '圣剑学院的魔剑使', 68, 0, '\圣剑学院的魔剑使', '', '', '', 20191014144336, 20191014144341, '')
+[INFO] [2019-11-08 15:20:25.000566][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '圣剑学院的魔剑使001.txt', 70, 258269, '\圣剑学院的魔剑使\圣剑学院的魔剑使001.txt', '', '', '', 20191014144306, 20191014144306, '')
+[INFO] [2019-11-08 15:20:25.000657][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '圣剑学院的魔剑使002.txt', 70, 241610, '\圣剑学院的魔剑使\圣剑学院的魔剑使002.txt', '', '', '', 20191014144330, 20191014144330, '')
+[INFO] [2019-11-08 15:20:25.000749][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '在大国开外挂，轻松征服异世界！', 68, 0, '\在大国开外挂，轻松征服异世界！', '', '', '', 20191012103921, 20191012103926, '')
+[INFO] [2019-11-08 15:20:25.000840][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '在大国开外挂，轻松征服异世界！001-当上冒牌皇帝，还有很多美少女老婆.txt', 70, 316372, '\在大国开外挂，轻松征服异世界！\在大国开外挂，轻松征服异世界！001-当上冒牌皇帝，还有很多美少女老婆.txt', '', '', '', 20191012103842, 20191012103842, '')
+[INFO] [2019-11-08 15:20:25.000932][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '在大国开外挂，轻松征服异世界！002-增加英雄新娘也是皇帝的重要工作.txt', 70, 307476, '\在大国开外挂，轻松征服异世界！\在大国开外挂，轻松征服异世界！002-增加英雄新娘也是皇帝的重要工作.txt', '', '', '', 20191012103850, 20191012103850, '')
+[INFO] [2019-11-08 15:20:26.000032][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '外挂级补师勇闯异世界迷宫', 68, 0, '\外挂级补师勇闯异世界迷宫', '', '', '', 20191011172817, 20191011172817, '')
+[INFO] [2019-11-08 15:20:26.000132][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '外挂级补师勇闯异世界迷宫001-辅助与回复的推广.txt', 70, 318396, '\外挂级补师勇闯异世界迷宫\外挂级补师勇闯异世界迷宫001-辅助与回复的推广.txt', '', '', '', 20191011172817, 20190528151708, '')
+[INFO] [2019-11-08 15:20:26.000232][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '外挂级补师勇闯异世界迷宫002-神龙人公会长.txt', 70, 342688, '\外挂级补师勇闯异世界迷宫\外挂级补师勇闯异世界迷宫002-神龙人公会长.txt', '', '', '', 20191011172817, 20191011172803, '')
+[INFO] [2019-11-08 15:20:26.000316][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '天久鹰央的事件病历簿', 68, 0, '\天久鹰央的事件病历簿', '', '', '', 20191021112928, 20191021112933, '')
+[INFO] [2019-11-08 15:20:26.000415][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '天久鹰央的事件病历簿001-穹顶的死亡天使.txt', 70, 488032, '\天久鹰央的事件病历簿\天久鹰央的事件病历簿001-穹顶的死亡天使.txt', '', '', '', 20191021112851, 20191021112851, '')
+[INFO] [2019-11-08 15:20:26.000489][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '天久鹰央的事件病历簿002-幻影手术室.txt', 70, 376990, '\天久鹰央的事件病历簿\天久鹰央的事件病历簿002-幻影手术室.txt', '', '', '', 20191021112915, 20191021112915, '')
+[INFO] [2019-11-08 15:20:26.000582][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '小书痴的下克上', 68, 4096, '\小书痴的下克上', '', '', '', 20191030141815, 20191030141820, '')
+[INFO] [2019-11-08 15:20:26.000666][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '小书痴的下克上001-士兵的女儿I.txt', 70, 436335, '\小书痴的下克上\小书痴的下克上001-士兵的女儿I.txt', '', '', '', 20191030141815, 20180617014906, '')
+[INFO] [2019-11-08 15:20:26.000756][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '小书痴的下克上002-士兵的女儿II.txt', 70, 506144, '\小书痴的下克上\小书痴的下克上002-士兵的女儿II.txt', '', '', '', 20191030141815, 20180624220528, '')
+[INFO] [2019-11-08 15:20:26.000840][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '小书痴的下克上003-士兵的女儿III.txt', 70, 648405, '\小书痴的下克上\小书痴的下克上003-士兵的女儿III.txt', '', '', '', 20191030141815, 20180624221558, '')
+[INFO] [2019-11-08 15:20:26.000922][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '小书痴的下克上004-神殿的见习女巫I.txt', 70, 560381, '\小书痴的下克上\小书痴的下克上004-神殿的见习女巫I.txt', '', '', '', 20191030141815, 20181228092846, '')
+[INFO] [2019-11-08 15:20:27.000007][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '小书痴的下克上005-神殿的见习女巫II.txt', 70, 584126, '\小书痴的下克上\小书痴的下克上005-神殿的见习女巫II.txt', '', '', '', 20191030141815, 20190104162134, '')
+[INFO] [2019-11-08 15:20:27.000091][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '小书痴的下克上006-神殿的见习女巫III.txt', 70, 496383, '\小书痴的下克上\小书痴的下克上006-神殿的见习女巫III.txt', '', '', '', 20191030141815, 20190104162148, '')
+[INFO] [2019-11-08 15:20:27.000180][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '小书痴的下克上007-神殿的见习女巫IV.txt', 70, 484350, '\小书痴的下克上\小书痴的下克上007-神殿的见习女巫IV.txt', '', '', '', 20191030141815, 20190107140344, '')
+[INFO] [2019-11-08 15:20:27.000265][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '小书痴的下克上008-领主的养女I.txt', 70, 527698, '\小书痴的下克上\小书痴的下克上008-领主的养女I.txt', '', '', '', 20191030141815, 20190215222510, '')
+[INFO] [2019-11-08 15:20:27.000407][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '小书痴的下克上009-领主的养女II.txt', 70, 523780, '\小书痴的下克上\小书痴的下克上009-领主的养女II.txt', '', '', '', 20191030141815, 20190629223212, '')
+[INFO] [2019-11-08 15:20:27.000507][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '小书痴的下克上010-领主的养女III.txt', 70, 505621, '\小书痴的下克上\小书痴的下克上010-领主的养女III.txt', '', '', '', 20191030141815, 20190629223232, '')
+[INFO] [2019-11-08 15:20:27.000597][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '小书痴的下克上011-领主的养女IV.txt', 70, 521455, '\小书痴的下克上\小书痴的下克上011-领主的养女IV.txt', '', '', '', 20191030141815, 20190702214350, '')
+[INFO] [2019-11-08 15:20:27.000690][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '小书痴的下克上012-领主的养女V.txt', 70, 550171, '\小书痴的下克上\小书痴的下克上012-领主的养女V.txt', '', '', '', 20191030141816, 20190809112728, '')
+[INFO] [2019-11-08 15:20:27.000766][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '小书痴的下克上013-贵族院的自称图书委员I.txt', 70, 592733, '\小书痴的下克上\小书痴的下克上013-贵族院的自称图书委员I.txt', '', '', '', 20191030141806, 20191030141806, '')
+[INFO] [2019-11-08 15:20:27.000848][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '平凡职业造就世界最强', 68, 4096, '\平凡职业造就世界最强', '', '', '', 20191021114410, 20191021114531, '')
+[INFO] [2019-11-08 15:20:27.000932][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '平凡职业造就世界最强-零001.txt', 70, 491853, '\平凡职业造就世界最强\平凡职业造就世界最强-零001.txt', '', '', '', 20191021114410, 20190524123740, '')
+[INFO] [2019-11-08 15:20:28.000007][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '平凡职业造就世界最强-零002.txt', 70, 612227, '\平凡职业造就世界最强\平凡职业造就世界最强-零002.txt', '', '', '', 20191021114410, 20190524123752, '')
+[INFO] [2019-11-08 15:20:28.000081][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '平凡职业造就世界最强-零003.txt', 70, 586875, '\平凡职业造就世界最强\平凡职业造就世界最强-零003.txt', '', '', '', 20191021114505, 20191021114505, '')
+[INFO] [2019-11-08 15:20:28.000166][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '平凡职业造就世界最强001.txt', 70, 538670, '\平凡职业造就世界最强\平凡职业造就世界最强001.txt', '', '', '', 20191021114410, 20190524123520, '')
+[INFO] [2019-11-08 15:20:28.000248][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '平凡职业造就世界最强002.txt', 70, 570631, '\平凡职业造就世界最强\平凡职业造就世界最强002.txt', '', '', '', 20191021114410, 20190524123532, '')
+[INFO] [2019-11-08 15:20:28.000332][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '平凡职业造就世界最强003.txt', 70, 526555, '\平凡职业造就世界最强\平凡职业造就世界最强003.txt', '', '', '', 20191021114410, 20190524123542, '')
+[INFO] [2019-11-08 15:20:28.000415][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '平凡职业造就世界最强004.txt', 70, 512367, '\平凡职业造就世界最强\平凡职业造就世界最强004.txt', '', '', '', 20191021114410, 20190524123558, '')
+[INFO] [2019-11-08 15:20:28.000499][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '平凡职业造就世界最强005.txt', 70, 487991, '\平凡职业造就世界最强\平凡职业造就世界最强005.txt', '', '', '', 20191021114410, 20190524123610, '')
+[INFO] [2019-11-08 15:20:28.000591][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '平凡职业造就世界最强006.txt', 70, 487359, '\平凡职业造就世界最强\平凡职业造就世界最强006.txt', '', '', '', 20191021114410, 20190524123632, '')
+[INFO] [2019-11-08 15:20:28.000690][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '平凡职业造就世界最强007.txt', 70, 482754, '\平凡职业造就世界最强\平凡职业造就世界最强007.txt', '', '', '', 20191021114410, 20190524123648, '')
+[INFO] [2019-11-08 15:20:28.000782][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '平凡职业造就世界最强008.txt', 70, 591821, '\平凡职业造就世界最强\平凡职业造就世界最强008.txt', '', '', '', 20191021114410, 20190524123700, '')
+[INFO] [2019-11-08 15:20:28.000874][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '平凡职业造就世界最强009.txt', 70, 536504, '\平凡职业造就世界最强\平凡职业造就世界最强009.txt', '', '', '', 20191021114410, 20190524123712, '')
+[INFO] [2019-11-08 15:20:28.000949][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '底层剑士与神兽〈女儿〉的日常生活', 68, 0, '\底层剑士与神兽〈女儿〉的日常生活', '', '', '', 20191011171543, 20191011171543, '')
+[INFO] [2019-11-08 15:20:29.000032][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '底层剑士与神兽〈女儿〉的日常生活001-全家携手攻略迷宫.txt', 70, 295942, '\底层剑士与神兽〈女儿〉的日常生活\底层剑士与神兽〈女儿〉的日常生活001-全家携手攻略迷宫.txt', '', '', '', 20191011171543, 20180219002202, '')
+[INFO] [2019-11-08 15:20:29.000123][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '底层剑士与神兽〈女儿〉的日常生活002-全家携手去冒险者学院.txt', 70, 350597, '\底层剑士与神兽〈女儿〉的日常生活\底层剑士与神兽〈女儿〉的日常生活002-全家携手去冒险者学院.txt', '', '', '', 20191011171543, 20190809113216, '')
+[INFO] [2019-11-08 15:20:29.000199][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '底层剑士与神兽〈女儿〉的日常生活003-全家携手养宠物.txt', 70, 342777, '\底层剑士与神兽〈女儿〉的日常生活\底层剑士与神兽〈女儿〉的日常生活003-全家携手养宠物.txt', '', '', '', 20191011171543, 20191011171510, '')
+[INFO] [2019-11-08 15:20:29.000282][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '异世界建国记', 68, 0, '\异世界建国记', '', '', '', 20191012103626, 20191012103729, '')
+[INFO] [2019-11-08 15:20:29.000355][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '异世界建国记001.txt', 70, 366879, '\异世界建国记\异世界建国记001.txt', '', '', '', 20191012103626, 20181030180446, '')
+[INFO] [2019-11-08 15:20:29.000440][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '异世界建国记002.txt', 70, 353890, '\异世界建国记\异世界建国记002.txt', '', '', '', 20191012103626, 20190204113732, '')
+[INFO] [2019-11-08 15:20:29.000524][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '异世界建国记003.txt', 70, 310600, '\异世界建国记\异世界建国记003.txt', '', '', '', 20191012103618, 20191012103618, '')
+[INFO] [2019-11-08 15:20:29.000615][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '我的勇者', 68, 4096, '\我的勇者', '', '', '', 20191011171417, 20191011171417, '')
+[INFO] [2019-11-08 15:20:29.000705][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '我的勇者001.txt', 70, 342958, '\我的勇者\我的勇者001.txt', '', '', '', 20191011171417, 20190919125956, '')
+[INFO] [2019-11-08 15:20:29.000790][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '我的勇者002.txt', 70, 346452, '\我的勇者\我的勇者002.txt', '', '', '', 20191011171417, 20190919125946, '')
+[INFO] [2019-11-08 15:20:29.000863][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '我的勇者003.txt', 70, 315560, '\我的勇者\我的勇者003.txt', '', '', '', 20191011171417, 20190919125924, '')
+[INFO] [2019-11-08 15:20:29.000957][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '我的勇者004.txt', 70, 318757, '\我的勇者\我的勇者004.txt', '', '', '', 20191011171417, 20190919125934, '')
+[INFO] [2019-11-08 15:20:30.000057][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '我的勇者005.txt', 70, 325682, '\我的勇者\我的勇者005.txt', '', '', '', 20191011171417, 20190919130022, '')
+[INFO] [2019-11-08 15:20:30.000148][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '我的勇者006.txt', 70, 320957, '\我的勇者\我的勇者006.txt', '', '', '', 20191011171417, 20190919130042, '')
+[INFO] [2019-11-08 15:20:30.000246][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '我的勇者007.txt', 70, 304329, '\我的勇者\我的勇者007.txt', '', '', '', 20191011171417, 20191011171255, '')
+[INFO] [2019-11-08 15:20:30.000332][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '我的勇者008.txt', 70, 417153, '\我的勇者\我的勇者008.txt', '', '', '', 20191011171417, 20191011171238, '')
+[INFO] [2019-11-08 15:20:30.000441][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '机动防卫者', 68, 0, '\机动防卫者', '', '', '', 20191014162951, 20191014163155, '')
+[INFO] [2019-11-08 15:20:30.000531][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '机动防卫者001.txt', 70, 398529, '\机动防卫者\机动防卫者001.txt', '', '', '', 20191014163003, 20191014163003, '')
+[INFO] [2019-11-08 15:20:30.000632][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '机动防卫者002.txt', 70, 310394, '\机动防卫者\机动防卫者002.txt', '', '', '', 20191014163026, 20191014163026, '')
+[INFO] [2019-11-08 15:20:30.000724][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '机动防卫者003.txt', 70, 294602, '\机动防卫者\机动防卫者003.txt', '', '', '', 20191014163133, 20191014163133, '')
+[INFO] [2019-11-08 15:20:30.000799][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '机动防卫者004.txt', 70, 280123, '\机动防卫者\机动防卫者004.txt', '', '', '', 20191014163034, 20191014163034, '')
+[INFO] [2019-11-08 15:20:30.000881][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '机动防卫者005.txt', 70, 315433, '\机动防卫者\机动防卫者005.txt', '', '', '', 20191014163044, 20191014163044, '')
+[INFO] [2019-11-08 15:20:30.000965][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '死党角色很难当吗？', 68, 4096, '\死党角色很难当吗？', '', '', '', 20191011171733, 20191011171733, '')
+[INFO] [2019-11-08 15:20:31.000065][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '死党角色很难当吗？001.txt', 70, 260524, '\死党角色很难当吗？\死党角色很难当吗？001.txt', '', '', '', 20191011171733, 20180624220234, '')
+[INFO] [2019-11-08 15:20:31.000149][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '死党角色很难当吗？002.txt', 70, 263358, '\死党角色很难当吗？\死党角色很难当吗？002.txt', '', '', '', 20191011171733, 20180624220254, '')
+[INFO] [2019-11-08 15:20:31.000231][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '死党角色很难当吗？003.txt', 70, 324986, '\死党角色很难当吗？\死党角色很难当吗？003.txt', '', '', '', 20191011171733, 20180624220330, '')
+[INFO] [2019-11-08 15:20:31.000332][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '死党角色很难当吗？004.txt', 70, 314854, '\死党角色很难当吗？\死党角色很难当吗？004.txt', '', '', '', 20191011171733, 20180831154450, '')
+[INFO] [2019-11-08 15:20:31.000432][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '死党角色很难当吗？005.txt', 70, 310234, '\死党角色很难当吗？\死党角色很难当吗？005.txt', '', '', '', 20191011171733, 20190616213736, '')
+[INFO] [2019-11-08 15:20:31.000524][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '死党角色很难当吗？006.5.txt', 70, 250954, '\死党角色很难当吗？\死党角色很难当吗？006.5.txt', '', '', '', 20191011171733, 20190829130358, '')
+[INFO] [2019-11-08 15:20:31.000606][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '死党角色很难当吗？006.txt', 70, 303223, '\死党角色很难当吗？\死党角色很难当吗？006.txt', '', '', '', 20191011171733, 20190802115454, '')
+[INFO] [2019-11-08 15:20:31.000715][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '死党角色很难当吗？007.txt', 70, 311587, '\死党角色很难当吗？\死党角色很难当吗？007.txt', '', '', '', 20191011171733, 20191011171713, '')
+[INFO] [2019-11-08 15:20:31.000790][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '沃特尼亚战记', 68, 0, '\沃特尼亚战记', '', '', '', 20191028141945, 20191028141950, '')
+[INFO] [2019-11-08 15:20:31.000879][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '沃特尼亚战记001.txt', 70, 369943, '\沃特尼亚战记\沃特尼亚战记001.txt', '', '', '', 20191028093634, 20191028093634, '')
+[INFO] [2019-11-08 15:20:31.000955][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '沃特尼亚战记002.txt', 70, 361622, '\沃特尼亚战记\沃特尼亚战记002.txt', '', '', '', 20191028103330, 20191028103334, '')
+[INFO] [2019-11-08 15:20:32.000040][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '沃特尼亚战记003.txt', 70, 291613, '\沃特尼亚战记\沃特尼亚战记003.txt', '', '', '', 20191028141916, 20191028141916, '')
+[INFO] [2019-11-08 15:20:32.000123][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '点满农民相关技能后，不知为何就变强了。', 68, 0, '\点满农民相关技能后，不知为何就变强了。', '', '', '', 20191012103657, 20191012103733, '')
+[INFO] [2019-11-08 15:20:32.000229][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '点满农民相关技能后，不知为何就变强了。001.txt', 70, 256314, '\点满农民相关技能后，不知为何就变强了。\点满农民相关技能后，不知为何就变强了。001.txt', '', '', '', 20191012103714, 20191012103714, '')
+[INFO] [2019-11-08 15:20:32.000307][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '田中～年龄等于单身资历的魔法师～', 68, 0, '\田中～年龄等于单身资历的魔法师～', '', '', '', 20191014145036, 20191014145040, '')
+[INFO] [2019-11-08 15:20:32.000390][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '田中～年龄等于单身资历的魔法师～001.txt', 70, 521664, '\田中～年龄等于单身资历的魔法师～\田中～年龄等于单身资历的魔法师～001.txt', '', '', '', 20191014145036, 20190103163346, '')
+[INFO] [2019-11-08 15:20:32.000482][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '田中～年龄等于单身资历的魔法师～002.txt', 70, 541818, '\田中～年龄等于单身资历的魔法师～\田中～年龄等于单身资历的魔法师～002.txt', '', '', '', 20191014145016, 20191014145016, '')
+[INFO] [2019-11-08 15:20:32.000565][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '田中～年龄等于单身资历的魔法师～003.txt', 70, 495362, '\田中～年龄等于单身资历的魔法师～\田中～年龄等于单身资历的魔法师～003.txt', '', '', '', 20191014145026, 20191014145026, '')
+[INFO] [2019-11-08 15:20:32.000657][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '终将成为神话的放学后战争', 68, 4096, '\终将成为神话的放学后战争', '', '', '', 20191021103802, 20191021104852, '')
+[INFO] [2019-11-08 15:20:32.000756][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '终将成为神话的放学后战争001-魔眼之王与屈服女神.txt', 70, 317478, '\终将成为神话的放学后战争\终将成为神话的放学后战争001-魔眼之王与屈服女神.txt', '', '', '', 20191021104022, 20191021104022, '')
+[INFO] [2019-11-08 15:20:32.000857][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '终将成为神话的放学后战争002-魔眼之王与三神同盟.txt', 70, 330657, '\终将成为神话的放学后战争\终将成为神话的放学后战争002-魔眼之王与三神同盟.txt', '', '', '', 20191021104048, 20191021104048, '')
+[INFO] [2019-11-08 15:20:32.000949][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '终将成为神话的放学后战争003-魔眼之王与神冥审判.txt', 70, 273955, '\终将成为神话的放学后战争\终将成为神话的放学后战争003-魔眼之王与神冥审判.txt', '', '', '', 20191021104114, 20191021104114, '')
+[INFO] [2019-11-08 15:20:33.000049][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '终将成为神话的放学后战争004-魔眼之王与哀神剑舞.txt', 70, 275760, '\终将成为神话的放学后战争\终将成为神话的放学后战争004-魔眼之王与哀神剑舞.txt', '', '', '', 20191021104138, 20191021104138, '')
+[INFO] [2019-11-08 15:20:33.000140][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '终将成为神话的放学后战争005-魔眼之王与狂神咆哮.txt', 70, 232182, '\终将成为神话的放学后战争\终将成为神话的放学后战争005-魔眼之王与狂神咆哮.txt', '', '', '', 20191021104233, 20191021104233, '')
+[INFO] [2019-11-08 15:20:33.000230][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '终将成为神话的放学后战争006-魔眼之王与女神觉醒.txt', 70, 282995, '\终将成为神话的放学后战争\终将成为神话的放学后战争006-魔眼之王与女神觉醒.txt', '', '', '', 20191021104701, 20191021104701, '')
+[INFO] [2019-11-08 15:20:33.000307][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '终将成为神话的放学后战争007-魔眼之王与堕天圣女.txt', 70, 231050, '\终将成为神话的放学后战争\终将成为神话的放学后战争007-魔眼之王与堕天圣女.txt', '', '', '', 20191021104720, 20191021104720, '')
+[INFO] [2019-11-08 15:20:33.000397][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '终将成为神话的放学后战争008-魔眼之王与天涯魔境.txt', 70, 270867, '\终将成为神话的放学后战争\终将成为神话的放学后战争008-魔眼之王与天涯魔境.txt', '', '', '', 20191021104753, 20191021104753, '')
+[INFO] [2019-11-08 15:20:33.000490][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '终将成为神话的放学后战争009-魔眼之王与至高天阶.txt', 70, 210410, '\终将成为神话的放学后战争\终将成为神话的放学后战争009-魔眼之王与至高天阶.txt', '', '', '', 20191021104813, 20191021104813, '')
+[INFO] [2019-11-08 15:20:33.000573][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '终将成为神话的放学后战争010-魔眼之王与天焦恋歌.txt', 70, 228712, '\终将成为神话的放学后战争\终将成为神话的放学后战争010-魔眼之王与天焦恋歌.txt', '', '', '', 20191021104839, 20191021104839, '')
+[INFO] [2019-11-08 15:20:33.000672][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '萌萌侵略者', 68, 4096, '\萌萌侵略者', '', '', '', 20191011172653, 20191011172653, '')
+[INFO] [2019-11-08 15:20:33.000765][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '萌萌侵略者001.txt', 70, 370042, '\萌萌侵略者\萌萌侵略者001.txt', '', '', '', 20191011172653, 20140921000648, '')
+[INFO] [2019-11-08 15:20:33.000848][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '萌萌侵略者002.txt', 70, 251447, '\萌萌侵略者\萌萌侵略者002.txt', '', '', '', 20191011172653, 20140921000656, '')
+[INFO] [2019-11-08 15:20:33.000954][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '萌萌侵略者003.txt', 70, 275915, '\萌萌侵略者\萌萌侵略者003.txt', '', '', '', 20191011172653, 20140921000706, '')
+[INFO] [2019-11-08 15:20:34.000048][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '萌萌侵略者004.txt', 70, 206474, '\萌萌侵略者\萌萌侵略者004.txt', '', '', '', 20191011172653, 20140921000724, '')
+[INFO] [2019-11-08 15:20:34.000157][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '萌萌侵略者005.txt', 70, 329761, '\萌萌侵略者\萌萌侵略者005.txt', '', '', '', 20191011172653, 20140921000732, '')
+[INFO] [2019-11-08 15:20:34.000248][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '萌萌侵略者006.txt', 70, 337301, '\萌萌侵略者\萌萌侵略者006.txt', '', '', '', 20191011172653, 20141126231200, '')
+[INFO] [2019-11-08 15:20:34.000340][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '萌萌侵略者007.txt', 70, 280920, '\萌萌侵略者\萌萌侵略者007.txt', '', '', '', 20191011172653, 20160406230428, '')
+[INFO] [2019-11-08 15:20:34.000423][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '萌萌侵略者008.txt', 70, 331718, '\萌萌侵略者\萌萌侵略者008.txt', '', '', '', 20191011172653, 20160406230438, '')
+[INFO] [2019-11-08 15:20:34.000505][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '萌萌侵略者009.txt', 70, 278600, '\萌萌侵略者\萌萌侵略者009.txt', '', '', '', 20191011172653, 20161015233328, '')
+[INFO] [2019-11-08 15:20:34.000598][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '萌萌侵略者010.txt', 70, 215762, '\萌萌侵略者\萌萌侵略者010.txt', '', '', '', 20191011172653, 20191011172404, '')
+[INFO] [2019-11-08 15:20:34.000690][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '萌萌侵略者011.txt', 70, 314384, '\萌萌侵略者\萌萌侵略者011.txt', '', '', '', 20191011172653, 20191011172424, '')
+[INFO] [2019-11-08 15:20:34.000773][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '萌萌侵略者012.txt', 70, 333171, '\萌萌侵略者\萌萌侵略者012.txt', '', '', '', 20191011172653, 20191011172440, '')
+[INFO] [2019-11-08 15:20:34.000874][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '萌萌侵略者013.txt', 70, 385123, '\萌萌侵略者\萌萌侵略者013.txt', '', '', '', 20191011172653, 20191011172535, '')
+[INFO] [2019-11-08 15:20:34.000972][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '萌萌侵略者014.txt', 70, 322653, '\萌萌侵略者\萌萌侵略者014.txt', '', '', '', 20191011172653, 20191011172543, '')
+[INFO] [2019-11-08 15:20:35.000071][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '萌萌侵略者015.txt', 70, 318247, '\萌萌侵略者\萌萌侵略者015.txt', '', '', '', 20191011172653, 20191011172630, '')
+[INFO] [2019-11-08 15:20:35.000157][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '萌萌侵略者016.txt', 70, 268021, '\萌萌侵略者\萌萌侵略者016.txt', '', '', '', 20191011172653, 20191011172620, '')
+[INFO] [2019-11-08 15:20:35.000240][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '萌萌侵略者017.txt', 70, 343655, '\萌萌侵略者\萌萌侵略者017.txt', '', '', '', 20191011172653, 20191011172615, '')
+[INFO] [2019-11-08 15:20:35.000331][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '被卷入了勇者召唤事件却发现异世界很和平', 68, 0, '\被卷入了勇者召唤事件却发现异世界很和平', '', '', '', 20191014144746, 20191014144838, '')
+[INFO] [2019-11-08 15:20:35.000415][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '被卷入了勇者召唤事件却发现异世界很和平001.txt', 70, 462387, '\被卷入了勇者召唤事件却发现异世界很和平\被卷入了勇者召唤事件却发现异世界很和平001.txt', '', '', '', 20191014144746, 20190414230156, '')
+[INFO] [2019-11-08 15:20:35.000498][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '被卷入了勇者召唤事件却发现异世界很和平002.txt', 70, 379430, '\被卷入了勇者召唤事件却发现异世界很和平\被卷入了勇者召唤事件却发现异世界很和平002.txt', '', '', '', 20191014144746, 20190515224238, '')
+[INFO] [2019-11-08 15:20:35.000590][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '被卷入了勇者召唤事件却发现异世界很和平003.txt', 70, 352719, '\被卷入了勇者召唤事件却发现异世界很和平\被卷入了勇者召唤事件却发现异世界很和平003.txt', '', '', '', 20191014144829, 20191014144829, '')
+[INFO] [2019-11-08 15:20:35.000682][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '解体技能后开挂新娘增加了', 68, 0, '\解体技能后开挂新娘增加了', '', '', '', 20191021140924, 20191021140931, '')
+[INFO] [2019-11-08 15:20:35.000773][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '解体技能后开挂新娘增加了001.txt', 70, 260374, '\解体技能后开挂新娘增加了\解体技能后开挂新娘增加了001.txt', '', '', '', 20191021140924, 20170716115338, '')
+[INFO] [2019-11-08 15:20:35.000873][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '解体技能后开挂新娘增加了002.txt', 70, 303561, '\解体技能后开挂新娘增加了\解体技能后开挂新娘增加了002.txt', '', '', '', 20191021140924, 20170827004946, '')
+[INFO] [2019-11-08 15:20:35.000974][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '解体技能后开挂新娘增加了003.txt', 70, 334675, '\解体技能后开挂新娘增加了\解体技能后开挂新娘增加了003.txt', '', '', '', 20191021140924, 20190319210854, '')
+[INFO] [2019-11-08 15:20:36.000065][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '解体技能后开挂新娘增加了004.txt', 70, 376625, '\解体技能后开挂新娘增加了\解体技能后开挂新娘增加了004.txt', '', '', '', 20191021140924, 20190629223704, '')
+[INFO] [2019-11-08 15:20:36.000156][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '解体技能后开挂新娘增加了005.txt', 70, 362547, '\解体技能后开挂新娘增加了\解体技能后开挂新娘增加了005.txt', '', '', '', 20191021140915, 20191021140915, '')
+[INFO] [2019-11-08 15:20:36.000257][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '话说当时我还不是主角', 68, 0, '\话说当时我还不是主角', '', '', '', 20191021140404, 20191021140652, '')
+[INFO] [2019-11-08 15:20:36.000340][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '话说当时我还不是主角001-一条爱澄是第一女主角.txt', 70, 275320, '\话说当时我还不是主角\话说当时我还不是主角001-一条爱澄是第一女主角.txt', '', '', '', 20191021140511, 20191021140511, '')
+[INFO] [2019-11-08 15:20:36.000415][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '话说当时我还不是主角002-不知为何女主角增加了.txt', 70, 239637, '\话说当时我还不是主角\话说当时我还不是主角002-不知为何女主角增加了.txt', '', '', '', 20191021140535, 20191021140535, '')
+[INFO] [2019-11-08 15:20:36.000498][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '话说当时我还不是主角003-为何我的眼前冒出选项.txt', 70, 223232, '\话说当时我还不是主角\话说当时我还不是主角003-为何我的眼前冒出选项.txt', '', '', '', 20191021140638, 20191021140638, '')
+[INFO] [2019-11-08 15:20:36.000590][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '贤者之孙', 68, 4096, '\贤者之孙', '', '', '', 20191011171008, 20191011171008, '')
+[INFO] [2019-11-08 15:20:36.000682][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '贤者之孙001-颠覆常识的新生.txt', 70, 314802, '\贤者之孙\贤者之孙001-颠覆常识的新生.txt', '', '', '', 20191011171008, 20170320004738, '')
+[INFO] [2019-11-08 15:20:36.000757][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '贤者之孙002-破天荒的新英雄.txt', 70, 312863, '\贤者之孙\贤者之孙002-破天荒的新英雄.txt', '', '', '', 20191011171008, 20170618225712, '')
+[INFO] [2019-11-08 15:20:36.000856][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '贤者之孙003-史上最强的魔法师团.txt', 70, 307076, '\贤者之孙\贤者之孙003-史上最强的魔法师团.txt', '', '', '', 20191011171008, 20171014235332, '')
+[INFO] [2019-11-08 15:20:36.000973][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '贤者之孙004-天下无双的魔王降临.txt', 70, 297337, '\贤者之孙\贤者之孙004-天下无双的魔王降临.txt', '', '', '', 20191011171008, 20180219002304, '')
+[INFO] [2019-11-08 15:20:37.000065][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '贤者之孙005-狂澜怒涛的三国会谈.txt', 70, 319958, '\贤者之孙\贤者之孙005-狂澜怒涛的三国会谈.txt', '', '', '', 20191011171008, 20180521141446, '')
+[INFO] [2019-11-08 15:20:37.000149][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '贤者之孙006-英姿飒爽的神使降临.txt', 70, 333247, '\贤者之孙\贤者之孙006-英姿飒爽的神使降临.txt', '', '', '', 20191011171008, 20180911154846, '')
+[INFO] [2019-11-08 15:20:37.000248][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '贤者之孙007-豪勇无双的英雄再临.txt', 70, 317954, '\贤者之孙\贤者之孙007-豪勇无双的英雄再临.txt', '', '', '', 20191011171008, 20190315233026, '')
+[INFO] [2019-11-08 15:20:37.000331][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '贤者之孙008-游嬉宴乐的英雄诞生祭.txt', 70, 318125, '\贤者之孙\贤者之孙008-游嬉宴乐的英雄诞生祭.txt', '', '', '', 20191011171008, 20190610191244, '')
+[INFO] [2019-11-08 15:20:37.000432][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '贤者之孙009-惊天动地的魔人来袭.txt', 70, 318056, '\贤者之孙\贤者之孙009-惊天动地的魔人来袭.txt', '', '', '', 20191011171008, 20191011170942, '')
+[INFO] [2019-11-08 15:20:37.000532][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '贤者之孙Web001-020.txt', 70, 267766, '\贤者之孙\贤者之孙Web001-020.txt', '', '', '', 20191011171008, 20160831001544, '')
+[INFO] [2019-11-08 15:20:37.000623][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '贤者之孙Web021-040.txt', 70, 277746, '\贤者之孙\贤者之孙Web021-040.txt', '', '', '', 20191011171008, 20160831001600, '')
+[INFO] [2019-11-08 15:20:37.000723][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '贤者之孙Web041-060.txt', 70, 438253, '\贤者之孙\贤者之孙Web041-060.txt', '', '', '', 20191011171008, 20160831001616, '')
+[INFO] [2019-11-08 15:20:37.000830][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '贤者之孙Web061-080.txt', 70, 447109, '\贤者之孙\贤者之孙Web061-080.txt', '', '', '', 20191011171008, 20160831001632, '')
+[INFO] [2019-11-08 15:20:37.000915][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '贤者之孙Web081-100.txt', 70, 389785, '\贤者之孙\贤者之孙Web081-100.txt', '', '', '', 20191011171008, 20160831001646, '')
+[INFO] [2019-11-08 15:20:37.000998][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '这个勇者明明超TUEEE却过度谨慎', 68, 0, '\这个勇者明明超TUEEE却过度谨慎', '', '', '', 20191012103936, 20191012103938, '')
+[INFO] [2019-11-08 15:20:38.000090][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '这个勇者明明超TUEEE却过度谨慎001.txt', 70, 321042, '\这个勇者明明超TUEEE却过度谨慎\这个勇者明明超TUEEE却过度谨慎001.txt', '', '', '', 20191012103936, 20190316210750, '')
+[INFO] [2019-11-08 15:20:38.000173][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '这个勇者明明超TUEEE却过度谨慎002.txt', 70, 345861, '\这个勇者明明超TUEEE却过度谨慎\这个勇者明明超TUEEE却过度谨慎002.txt', '', '', '', 20191012103936, 20190610191430, '')
+[INFO] [2019-11-08 15:20:38.000274][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '这个勇者明明超TUEEE却过度谨慎003.txt', 70, 383465, '\这个勇者明明超TUEEE却过度谨慎\这个勇者明明超TUEEE却过度谨慎003.txt', '', '', '', 20191012103809, 20191012103809, '')
+[INFO] [2019-11-08 15:20:38.000379][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '逆转召唤～全校被召唤到连隐藏设定我都了若指掌的异世界～', 68, 0, '\逆转召唤～全校被召唤到连隐藏设定我都了若指掌的异世界～', '', '', '', 20191011170849, 20191011170849, '')
+[INFO] [2019-11-08 15:20:38.000448][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '逆转召唤～全校被召唤到连隐藏设定我都了若指掌的异世界～001.txt', 70, 327940, '\逆转召唤～全校被召唤到连隐藏设定我都了若指掌的异世界～\逆转召唤～全校被召唤到连隐藏设定我都了若指掌的异世界～001.txt', '', '', '', 20191011170849, 20170114010234, '')
+[INFO] [2019-11-08 15:20:38.000540][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '逆转召唤～全校被召唤到连隐藏设定我都了若指掌的异世界～002.txt', 70, 243790, '\逆转召唤～全校被召唤到连隐藏设定我都了若指掌的异世界～\逆转召唤～全校被召唤到连隐藏设定我都了若指掌的异世界～002.txt', '', '', '', 20191011170849, 20191011170738, '')
+[INFO] [2019-11-08 15:20:38.000632][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '青梅竹马绝对不会输的恋爱喜剧', 68, 0, '\青梅竹马绝对不会输的恋爱喜剧', '', '', '', 20191014144459, 20191014144502, '')
+[INFO] [2019-11-08 15:20:38.000713][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '青梅竹马绝对不会输的恋爱喜剧001.txt', 70, 301545, '\青梅竹马绝对不会输的恋爱喜剧\青梅竹马绝对不会输的恋爱喜剧001.txt', '', '', '', 20191014144452, 20191014144452, '')
+[INFO] [2019-11-08 15:20:38.000790][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '靠废柴技能【状态异常】成为最强的我将蹂躏一切', 68, 0, '\靠废柴技能【状态异常】成为最强的我将蹂躏一切', '', '', '', 20191011171847, 20191011171847, '')
+[INFO] [2019-11-08 15:20:38.000873][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '靠废柴技能【状态异常】成为最强的我将蹂躏一切001.txt', 70, 417255, '\靠废柴技能【状态异常】成为最强的我将蹂躏一切\靠废柴技能【状态异常】成为最强的我将蹂躏一切001.txt', '', '', '', 20191011171847, 20190502201822, '')
+[INFO] [2019-11-08 15:20:38.000965][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.insert(BaseSqliteDAO.java:106)] -  INSERT INTO file_list(disk_id, file_name, file_type, file_size, file_path,file_hash_01, file_hash_02, file_hash_03, create_date, update_date, remark)  VALUES( 2, '靠废柴技能【状态异常】成为最强的我将蹂躏一切002.txt', 70, 431028, '\靠废柴技能【状态异常】成为最强的我将蹂躏一切\靠废柴技能【状态异常】成为最强的我将蹂躏一切002.txt', '', '', '', 20191011171847, 20191011171831, '')
+[INFO] [2019-11-08 15:22:45.000467][air.kanna.mystorage.StartUp.initData(StartUp.java:191)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[WARN] [2019-11-08 15:22:45.000473][air.kanna.kindlesync.config.impl.BaseFileConfigService.getConfig(BaseFileConfigService.java:41)] - propConfigFile is null, is a directory or is not exists
+[INFO] [2019-11-08 15:22:45.000768][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[INFO] [2019-11-08 15:22:58.000580][air.kanna.mystorage.StartUp.initData(StartUp.java:191)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[WARN] [2019-11-08 15:22:58.000586][air.kanna.kindlesync.config.impl.BaseFileConfigService.getConfig(BaseFileConfigService.java:41)] - propConfigFile is null, is a directory or is not exists
+[INFO] [2019-11-08 15:22:58.000896][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[INFO] [2019-11-08 15:23:02.000766][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.deleteByCondition(FileItemDAOSqliteImpl.java:120)] -  DELETE FROM file_list WHERE 1 = 1  AND disk_id = 2
+[INFO] [2019-11-08 15:53:00.000980][air.kanna.mystorage.StartUp.initData(StartUp.java:227)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[WARN] [2019-11-08 15:53:00.000987][air.kanna.kindlesync.config.impl.BaseFileConfigService.getConfig(BaseFileConfigService.java:41)] - propConfigFile is null, is a directory or is not exists
+[INFO] [2019-11-08 15:53:01.000297][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[INFO] [2019-11-08 15:54:42.000214][air.kanna.mystorage.StartUp.initData(StartUp.java:227)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[WARN] [2019-11-08 15:54:42.000220][air.kanna.kindlesync.config.impl.BaseFileConfigService.getConfig(BaseFileConfigService.java:41)] - propConfigFile is null, is a directory or is not exists
+[INFO] [2019-11-08 15:54:42.000521][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[INFO] [2019-11-08 15:57:00.000666][air.kanna.mystorage.StartUp.initData(StartUp.java:241)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[WARN] [2019-11-08 15:57:00.000672][air.kanna.kindlesync.config.impl.BaseFileConfigService.getConfig(BaseFileConfigService.java:41)] - propConfigFile is null, is a directory or is not exists
+[INFO] [2019-11-08 15:57:00.000971][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[INFO] [2019-11-08 15:57:09.000418][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.deleteByCondition(FileItemDAOSqliteImpl.java:125)] -  DELETE FROM file_list WHERE 1 = 1  AND disk_id = 1
+[INFO] [2019-11-08 15:57:36.000749][air.kanna.mystorage.StartUp.initData(StartUp.java:242)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[WARN] [2019-11-08 15:57:36.000755][air.kanna.kindlesync.config.impl.BaseFileConfigService.getConfig(BaseFileConfigService.java:41)] - propConfigFile is null, is a directory or is not exists
+[INFO] [2019-11-08 15:57:37.000051][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[INFO] [2019-11-08 15:57:50.000708][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[INFO] [2019-11-08 15:57:50.000722][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.deleteByCondition(FileItemDAOSqliteImpl.java:125)] -  DELETE FROM file_list WHERE 1 = 1  AND disk_id = 3
+[INFO] [2019-11-08 15:58:02.000298][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.deleteByCondition(FileItemDAOSqliteImpl.java:125)] -  DELETE FROM file_list WHERE 1 = 1  AND disk_id = 3
+[INFO] [2019-11-08 15:58:05.000170][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[INFO] [2019-11-08 15:58:13.000608][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[INFO] [2019-11-08 15:58:13.000619][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.deleteByCondition(FileItemDAOSqliteImpl.java:125)] -  DELETE FROM file_list WHERE 1 = 1  AND disk_id = 4
+[INFO] [2019-11-08 16:32:24.000080][air.kanna.mystorage.StartUp.initData(StartUp.java:260)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[WARN] [2019-11-08 16:32:24.000087][air.kanna.kindlesync.config.impl.BaseFileConfigService.getConfig(BaseFileConfigService.java:41)] - propConfigFile is null, is a directory or is not exists
+[INFO] [2019-11-08 16:32:24.000385][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[INFO] [2019-11-08 16:32:27.000237][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1 
+[INFO] [2019-11-08 16:32:27.000237][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 0
+[INFO] [2019-11-08 16:36:33.000817][air.kanna.mystorage.StartUp.initData(StartUp.java:261)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[WARN] [2019-11-08 16:36:33.000824][air.kanna.kindlesync.config.impl.BaseFileConfigService.getConfig(BaseFileConfigService.java:41)] - propConfigFile is null, is a directory or is not exists
+[INFO] [2019-11-08 16:36:34.000126][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[INFO] [2019-11-08 16:36:37.000773][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1 
+[INFO] [2019-11-08 16:36:37.000773][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 0
+[INFO] [2019-11-08 16:39:42.000424][air.kanna.mystorage.StartUp.initData(StartUp.java:261)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[WARN] [2019-11-08 16:39:42.000431][air.kanna.kindlesync.config.impl.BaseFileConfigService.getConfig(BaseFileConfigService.java:41)] - propConfigFile is null, is a directory or is not exists
+[INFO] [2019-11-08 16:39:42.000727][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[INFO] [2019-11-08 16:39:45.000181][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1 
+[INFO] [2019-11-08 16:39:45.000181][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 0
+[INFO] [2019-11-08 16:44:27.000488][air.kanna.mystorage.StartUp.initData(StartUp.java:261)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[WARN] [2019-11-08 16:44:27.000494][air.kanna.kindlesync.config.impl.BaseFileConfigService.getConfig(BaseFileConfigService.java:41)] - propConfigFile is null, is a directory or is not exists
+[INFO] [2019-11-08 16:44:27.000793][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[INFO] [2019-11-08 16:44:29.000012][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1 
+[INFO] [2019-11-08 16:44:29.000013][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 0
+[INFO] [2019-11-08 16:52:07.000697][air.kanna.mystorage.StartUp.initData(StartUp.java:261)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[WARN] [2019-11-08 16:52:07.000704][air.kanna.kindlesync.config.impl.BaseFileConfigService.getConfig(BaseFileConfigService.java:41)] - propConfigFile is null, is a directory or is not exists
+[INFO] [2019-11-08 16:52:07.000995][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[INFO] [2019-11-08 16:52:09.000516][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1 
+[INFO] [2019-11-08 16:52:09.000517][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 0
+[INFO] [2019-11-08 16:52:13.000499][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1 
+[INFO] [2019-11-08 16:52:13.000500][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 0
+[INFO] [2019-11-08 16:55:05.000417][air.kanna.mystorage.StartUp.initData(StartUp.java:261)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[WARN] [2019-11-08 16:55:05.000425][air.kanna.kindlesync.config.impl.BaseFileConfigService.getConfig(BaseFileConfigService.java:41)] - propConfigFile is null, is a directory or is not exists
+[INFO] [2019-11-08 16:55:05.000758][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[INFO] [2019-11-08 16:55:11.000556][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1 
+[INFO] [2019-11-08 16:55:11.000556][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 0
+[INFO] [2019-11-08 16:55:16.000268][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1  AND file_name LIKE '%29%'
+[INFO] [2019-11-08 16:55:16.000268][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  AND file_name LIKE '%29%' LIMIT 50 OFFSET 0
+[INFO] [2019-11-08 16:55:22.000675][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1  AND file_name LIKE '%297%'
+[INFO] [2019-11-08 16:55:25.000883][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1  AND file_name LIKE '%297%'
+[INFO] [2019-11-08 16:55:57.000691][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1  AND file_name LIKE '%29%'
+[INFO] [2019-11-08 16:55:57.000692][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  AND file_name LIKE '%29%' LIMIT 50 OFFSET 0
+[INFO] [2019-11-08 16:56:01.000571][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1  AND file_name LIKE '%297%'
+[INFO] [2019-11-08 16:57:32.000016][air.kanna.mystorage.StartUp.initData(StartUp.java:261)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[WARN] [2019-11-08 16:57:32.000023][air.kanna.kindlesync.config.impl.BaseFileConfigService.getConfig(BaseFileConfigService.java:41)] - propConfigFile is null, is a directory or is not exists
+[INFO] [2019-11-08 16:57:32.000341][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[INFO] [2019-11-08 16:57:42.000963][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1 
+[INFO] [2019-11-08 16:57:42.000964][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 0
+[INFO] [2019-11-08 16:57:47.000868][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1  AND file_name LIKE '%555%'
+[INFO] [2019-11-08 16:58:06.000971][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1  AND file_name LIKE '%27%'
+[INFO] [2019-11-08 16:58:06.000972][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  AND file_name LIKE '%27%' LIMIT 50 OFFSET 0
+[INFO] [2019-11-08 16:58:15.000123][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1  AND file_name LIKE '%29%'
+[INFO] [2019-11-08 16:58:15.000123][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  AND file_name LIKE '%29%' LIMIT 50 OFFSET 0
+[INFO] [2019-11-08 17:16:20.000472][air.kanna.mystorage.StartUp.initData(StartUp.java:288)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[WARN] [2019-11-08 17:16:20.000484][air.kanna.kindlesync.config.impl.BaseFileConfigService.getConfig(BaseFileConfigService.java:41)] - propConfigFile is null, is a directory or is not exists
+[INFO] [2019-11-08 17:16:20.000817][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[INFO] [2019-11-08 17:16:38.000619][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1 
+[INFO] [2019-11-08 17:16:38.000620][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 0
+[INFO] [2019-11-08 17:21:31.000322][air.kanna.mystorage.StartUp.initData(StartUp.java:290)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[WARN] [2019-11-08 17:21:31.000333][air.kanna.kindlesync.config.impl.BaseFileConfigService.getConfig(BaseFileConfigService.java:41)] - propConfigFile is null, is a directory or is not exists
+[INFO] [2019-11-08 17:21:31.000686][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[INFO] [2019-11-08 17:28:20.000229][air.kanna.mystorage.StartUp.initData(StartUp.java:299)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[WARN] [2019-11-08 17:28:20.000235][air.kanna.kindlesync.config.impl.BaseFileConfigService.getConfig(BaseFileConfigService.java:41)] - propConfigFile is null, is a directory or is not exists
+[INFO] [2019-11-08 17:28:20.000535][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[INFO] [2019-11-08 17:28:23.000250][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1 
+[INFO] [2019-11-08 17:28:23.000251][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 0
+[INFO] [2019-11-08 17:28:31.000941][air.kanna.mystorage.StartUp.initData(StartUp.java:299)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[WARN] [2019-11-08 17:28:31.000951][air.kanna.kindlesync.config.impl.BaseFileConfigService.getConfig(BaseFileConfigService.java:41)] - propConfigFile is null, is a directory or is not exists
+[INFO] [2019-11-08 17:28:32.000294][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[INFO] [2019-11-08 17:29:22.000339][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1 
+[INFO] [2019-11-08 17:29:22.000340][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 0
+[INFO] [2019-11-11 14:51:11.000790][air.kanna.mystorage.StartUp.initData(StartUp.java:300)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[WARN] [2019-11-11 14:51:11.000801][air.kanna.kindlesync.config.impl.BaseFileConfigService.getConfig(BaseFileConfigService.java:41)] - propConfigFile is null, is a directory or is not exists
+[INFO] [2019-11-11 14:51:12.000147][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[INFO] [2019-11-11 14:51:18.000738][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1 
+[INFO] [2019-11-11 14:51:18.000738][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 0
+[INFO] [2019-11-11 14:51:23.000073][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1 
+[INFO] [2019-11-11 14:51:23.000073][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 0
+[INFO] [2019-11-11 14:51:27.000273][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1 
+[INFO] [2019-11-11 14:51:27.000273][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 0
+[INFO] [2019-11-11 14:52:11.000406][air.kanna.mystorage.StartUp.initData(StartUp.java:300)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[WARN] [2019-11-11 14:52:11.000414][air.kanna.kindlesync.config.impl.BaseFileConfigService.getConfig(BaseFileConfigService.java:41)] - propConfigFile is null, is a directory or is not exists
+[INFO] [2019-11-11 14:52:11.000733][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[INFO] [2019-11-11 14:52:17.000802][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1 
+[INFO] [2019-11-11 14:52:17.000803][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 0
+[INFO] [2019-11-11 14:54:01.000537][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1 
+[INFO] [2019-11-11 14:54:01.000538][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 0
+[INFO] [2019-11-11 14:54:45.000936][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1 
+[INFO] [2019-11-11 14:54:45.000937][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 0
+[INFO] [2019-11-11 14:55:09.000376][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1 
+[INFO] [2019-11-11 14:55:09.000377][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 0
+[INFO] [2019-11-11 14:55:51.000992][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1 
+[INFO] [2019-11-11 14:55:51.000993][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 0
+[INFO] [2019-11-11 14:58:17.000952][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1 
+[INFO] [2019-11-11 14:58:17.000953][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 0
+[INFO] [2019-11-11 15:03:08.000513][air.kanna.mystorage.StartUp.initData(StartUp.java:300)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[WARN] [2019-11-11 15:03:08.000520][air.kanna.kindlesync.config.impl.BaseFileConfigService.getConfig(BaseFileConfigService.java:41)] - propConfigFile is null, is a directory or is not exists
+[INFO] [2019-11-11 15:03:08.000827][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[INFO] [2019-11-11 15:03:14.000289][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1 
+[INFO] [2019-11-11 15:03:14.000289][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 0
+[INFO] [2019-11-11 15:03:29.000920][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1 
+[INFO] [2019-11-11 15:03:29.000921][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 0
+[INFO] [2019-11-11 15:03:31.000512][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1 
+[INFO] [2019-11-11 15:03:31.000513][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 0
+[INFO] [2019-11-11 15:03:36.000120][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1  AND file_name LIKE '%lv%'
+[INFO] [2019-11-11 15:03:36.000121][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  AND file_name LIKE '%lv%' LIMIT 50 OFFSET 0
+[INFO] [2019-11-11 15:03:54.000928][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1 
+[INFO] [2019-11-11 15:03:54.000929][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 0
+[INFO] [2019-11-11 15:08:09.000197][air.kanna.mystorage.StartUp.initData(StartUp.java:312)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[WARN] [2019-11-11 15:08:09.000203][air.kanna.kindlesync.config.impl.BaseFileConfigService.getConfig(BaseFileConfigService.java:41)] - propConfigFile is null, is a directory or is not exists
+[INFO] [2019-11-11 15:08:09.000503][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[INFO] [2019-11-11 16:24:45.000499][air.kanna.mystorage.StartUp.initData(StartUp.java:313)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[WARN] [2019-11-11 16:24:45.000505][air.kanna.kindlesync.config.impl.BaseFileConfigService.getConfig(BaseFileConfigService.java:41)] - propConfigFile is null, is a directory or is not exists
+[INFO] [2019-11-11 16:24:45.000901][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[INFO] [2019-11-11 16:25:08.000942][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1 
+[INFO] [2019-11-11 16:25:08.000942][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 0
+[INFO] [2019-11-11 16:32:08.000607][air.kanna.mystorage.StartUp.initData(StartUp.java:337)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[INFO] [2019-11-11 16:32:08.000928][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[INFO] [2019-11-11 16:32:12.000485][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1 
+[INFO] [2019-11-11 16:32:12.000486][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 0
+[INFO] [2019-11-11 16:32:18.000140][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 50
+[INFO] [2019-11-11 16:32:21.000909][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 0
+[INFO] [2019-11-11 16:32:23.000788][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 50
+[INFO] [2019-11-11 16:32:25.000829][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 100
+[INFO] [2019-11-11 16:32:31.000485][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 50
+[INFO] [2019-11-11 16:32:33.000749][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 100
+[INFO] [2019-11-11 16:32:34.000309][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 150
+[INFO] [2019-11-11 16:32:34.000901][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 200
+[INFO] [2019-11-11 16:33:34.000952][air.kanna.mystorage.StartUp.initData(StartUp.java:337)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[INFO] [2019-11-11 16:33:35.000284][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[INFO] [2019-11-11 16:33:48.000815][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1 
+[INFO] [2019-11-11 16:33:48.000816][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 0
+[INFO] [2019-11-11 16:34:04.000324][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 50
+[INFO] [2019-11-11 16:34:04.000709][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 100
+[INFO] [2019-11-11 16:34:05.000148][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 150
+[INFO] [2019-11-11 16:34:20.000653][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 200
+[INFO] [2019-11-11 16:37:37.000674][air.kanna.mystorage.StartUp.initData(StartUp.java:337)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[INFO] [2019-11-11 16:37:37.000982][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[INFO] [2019-11-11 16:37:39.000381][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1 
+[INFO] [2019-11-11 16:37:39.000382][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 0
+[INFO] [2019-11-11 16:37:46.000012][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 50
+[INFO] [2019-11-11 16:37:46.000349][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 100
+[INFO] [2019-11-11 16:37:46.000685][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 150
+[INFO] [2019-11-11 16:37:47.000053][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 200
+[INFO] [2019-11-11 16:37:50.000292][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 150
+[INFO] [2019-11-11 16:37:50.000660][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 100
+[INFO] [2019-11-11 16:37:54.000117][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1  AND file_name LIKE '%ln%'
+[INFO] [2019-11-11 16:37:57.000533][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1  AND file_name LIKE '%lv%'
+[INFO] [2019-11-11 16:37:57.000534][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  AND file_name LIKE '%lv%' LIMIT 50 OFFSET 0
+[INFO] [2019-11-11 16:38:04.000449][air.kanna.mystorage.StartUp.initData(StartUp.java:337)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[INFO] [2019-11-11 16:38:04.000757][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[INFO] [2019-11-11 16:38:08.000438][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1  AND file_name LIKE '%lv%'
+[INFO] [2019-11-11 16:38:08.000439][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  AND file_name LIKE '%lv%' LIMIT 50 OFFSET 0
+[INFO] [2019-11-11 16:38:10.000924][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1 
+[INFO] [2019-11-11 16:38:10.000925][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  LIMIT 50 OFFSET 0
+[INFO] [2019-11-11 16:38:15.000237][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1  AND fileType = 68
+[ERROR] [2019-11-11 16:38:15.000239][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:106)] - list By Condition Count error
+org.sqlite.SQLiteException: [SQLITE_ERROR] SQL error or missing database (no such column: fileType)
+	at org.sqlite.core.DB.newSQLException(DB.java:941)
+	at org.sqlite.core.DB.newSQLException(DB.java:953)
+	at org.sqlite.core.DB.throwex(DB.java:918)
+	at org.sqlite.core.NativeDB.prepare_utf8(Native Method)
+	at org.sqlite.core.NativeDB.prepare(NativeDB.java:134)
+	at org.sqlite.core.DB.prepare(DB.java:257)
+	at org.sqlite.jdbc3.JDBC3Statement.executeQuery(JDBC3Statement.java:73)
+	at air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:98)
+	at air.kanna.mystorage.service.impl.FileItemServiceImpl.getByConditionCount(FileItemServiceImpl.java:34)
+	at air.kanna.mystorage.StartUp.doSearch(StartUp.java:482)
+	at air.kanna.mystorage.StartUp.access$16(StartUp.java:462)
+	at air.kanna.mystorage.StartUp$6.actionPerformed(StartUp.java:189)
+	at javax.swing.AbstractButton.fireActionPerformed(Unknown Source)
+	at javax.swing.AbstractButton$Handler.actionPerformed(Unknown Source)
+	at javax.swing.DefaultButtonModel.fireActionPerformed(Unknown Source)
+	at javax.swing.DefaultButtonModel.setPressed(Unknown Source)
+	at javax.swing.plaf.basic.BasicButtonListener.mouseReleased(Unknown Source)
+	at java.awt.Component.processMouseEvent(Unknown Source)
+	at javax.swing.JComponent.processMouseEvent(Unknown Source)
+	at java.awt.Component.processEvent(Unknown Source)
+	at java.awt.Container.processEvent(Unknown Source)
+	at java.awt.Component.dispatchEventImpl(Unknown Source)
+	at java.awt.Container.dispatchEventImpl(Unknown Source)
+	at java.awt.Component.dispatchEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.retargetMouseEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.processMouseEvent(Unknown Source)
+	at java.awt.LightweightDispatcher.dispatchEvent(Unknown Source)
+	at java.awt.Container.dispatchEventImpl(Unknown Source)
+	at java.awt.Window.dispatchEventImpl(Unknown Source)
+	at java.awt.Component.dispatchEvent(Unknown Source)
+	at java.awt.EventQueue.dispatchEventImpl(Unknown Source)
+	at java.awt.EventQueue.access$500(Unknown Source)
+	at java.awt.EventQueue$3.run(Unknown Source)
+	at java.awt.EventQueue$3.run(Unknown Source)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(Unknown Source)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(Unknown Source)
+	at java.awt.EventQueue$4.run(Unknown Source)
+	at java.awt.EventQueue$4.run(Unknown Source)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(Unknown Source)
+	at java.awt.EventQueue.dispatchEvent(Unknown Source)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.run(Unknown Source)
+[INFO] [2019-11-11 16:39:48.000463][air.kanna.mystorage.StartUp.initData(StartUp.java:337)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[INFO] [2019-11-11 16:39:48.000784][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[INFO] [2019-11-11 16:39:54.000358][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1  AND file_type = 70
+[INFO] [2019-11-11 16:39:54.000359][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  AND file_type = 70 LIMIT 50 OFFSET 0
+[INFO] [2019-11-11 16:40:10.000076][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  AND file_type = 70 LIMIT 50 OFFSET 50
+[INFO] [2019-11-11 16:40:10.000620][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  AND file_type = 70 LIMIT 50 OFFSET 100
+[INFO] [2019-11-11 16:40:14.000820][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1  AND file_type = 68
+[INFO] [2019-11-11 16:40:14.000821][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  AND file_type = 68 LIMIT 50 OFFSET 0
+[INFO] [2019-11-11 16:56:09.000372][air.kanna.mystorage.StartUp.initData(StartUp.java:337)] - config file: D:\MyGitSource\MyStorage\mystorage\config.cfg
+[INFO] [2019-11-11 16:56:09.000683][air.kanna.mystorage.dao.impl.sqlite.BaseSqliteDAO.listAllResultSet(BaseSqliteDAO.java:177)] - SELECT * FROM disk_description
+[INFO] [2019-11-11 16:56:11.000989][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByConditionCount(FileItemDAOSqliteImpl.java:95)] -  SELECT count(*) FROM file_list WHERE 1 = 1  AND file_type = 68
+[INFO] [2019-11-11 16:56:11.000990][air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl.listByCondition(FileItemDAOSqliteImpl.java:64)] -  SELECT * FROM file_list WHERE 1 = 1  AND file_type = 68 LIMIT 50 OFFSET 0
