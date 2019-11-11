@@ -2,6 +2,8 @@ package air.kanna.mystorage;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -71,6 +73,7 @@ public class StartUp {
     private JLabel processTextTb;
     private JLabel pageNumLb;
     private JLabel totalPageLb;
+    private JLabel totalItemLb;
     private JProgressBar executeProcess;
     private JTextField fileNameTf;
     private JComboBox<String> fileTypeCb;
@@ -497,6 +500,7 @@ public class StartUp {
         
         pageNumLb.setText("" + pager.getPage());
         totalPageLb.setText("" + total);
+        totalItemLb.setText("" + pager.getTotal());
         
         if(pager.getPage() <= 1) {
             prevBtn.setEnabled(false);
@@ -685,28 +689,53 @@ public class StartUp {
         
         
         JPanel panel07 = new JPanel();
-        paramPanel.add(panel07);
-        panel07.setLayout(new GridLayout(2, 2, 0, 0));
-
-        JLabel label_3 = new JLabel("当前页：");
         JPanel panel09 = new JPanel();
-        panel09.add(label_3);
+        prevBtn = new JButton("上一页");
+        nextBtn = new JButton("下一页");
+        paramPanel.add(panel07);
+        
+        GridBagLayout gridBagLayout = new GridBagLayout();
+        GridBagConstraints constraints = new GridBagConstraints();
+        
+        panel07.setLayout(gridBagLayout);
+        
+        constraints.fill = GridBagConstraints.BOTH;
+        constraints.weightx = 1.0;
+        constraints.weighty = 1.0;
+        constraints.gridheight = 1;
+        constraints.gridwidth = GridBagConstraints.REMAINDER;
+        gridBagLayout.setConstraints(panel09, constraints);
         panel07.add(panel09);
+        
+        constraints.gridheight = 1;
+        constraints.gridwidth = 1;
+        gridBagLayout.setConstraints(prevBtn, constraints);
+        
+        panel07.add(prevBtn);
+        gridBagLayout.setConstraints(nextBtn, constraints);
+        panel07.add(nextBtn);
+        
+        JLabel label_3 = new JLabel("页数：");
+        panel09.add(label_3);
         
         pageNumLb = new JLabel("-");
         panel09.add(pageNumLb);
         
-        JLabel label_4 = new JLabel("总页数：");
-        JPanel panel10 = new JPanel();
-        panel10.add(label_4);
-        panel07.add(panel10);
+        JLabel label_4 = new JLabel(" / ");
+        panel09.add(label_4);
         
         totalPageLb = new JLabel("-");
-        panel10.add(totalPageLb);
-        prevBtn = new JButton("上一页");
-        panel07.add(prevBtn);
-        nextBtn = new JButton("下一页");
-        panel07.add(nextBtn);
+        panel09.add(totalPageLb);
+        
+        JLabel label_6 = new JLabel(" ; ");
+        panel09.add(label_6);
+        
+        JLabel label_7 = new JLabel("总条数：");
+        panel09.add(label_7);
+        
+        totalItemLb = new JLabel("-");
+        panel09.add(totalItemLb);
+
         prevBtn.setEnabled(false);
         nextBtn.setEnabled(false);
         
