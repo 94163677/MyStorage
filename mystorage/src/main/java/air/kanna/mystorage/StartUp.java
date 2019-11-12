@@ -100,6 +100,7 @@ public class StartUp {
     private Pager pager;
 
     private TableColumnModelListener colummModelListener;
+    private ProcessAndLabelProcListener processListener;
     private int[] columnLength = new int[] {0, 0, 0, 0, 0, 0, 0};
     
 
@@ -110,6 +111,25 @@ public class StartUp {
         initialize();
         initControl();
         initData();
+    }
+    
+    private void setWaiting(boolean isWaiting) {
+        boolean enable = !isWaiting;
+        
+        fileNameTf.setEnabled(enable);
+        fileTypeCb.setEnabled(enable);
+        diskCb.setEnabled(enable);
+        newDiskBtn.setEnabled(enable);
+        delDiskBtn.setEnabled(enable);
+        rescanBtn.setEnabled(enable);
+        resetBtn.setEnabled(enable);
+        searchBtn.setEnabled(enable);
+        if(enable) {
+            resetPage();
+        }else {
+            prevBtn.setEnabled(enable);
+            nextBtn.setEnabled(enable);
+        }
     }
     
     private void initControl() {
@@ -186,7 +206,7 @@ public class StartUp {
         
         searchBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                order = null;
+                order = getDefaultOrder();
                 pager.setPage(1);
                 pager.setTotal(-1);
                 doSearch();
@@ -244,6 +264,8 @@ public class StartUp {
             public void columnSelectionChanged(ListSelectionEvent e) {}
             
         };
+        
+        processListener = new ProcessAndLabelProcListener(processTextTb, executeProcess);
 
         dataTable.getColumnModel().addColumnModelListener(colummModelListener);
     }
@@ -297,40 +319,89 @@ public class StartUp {
             return;
         }
         
-        FileItemCondition condition = new FileItemCondition();
-        List<FileItem> items = null;
-        int insCount = 0, delCount = 0;
+        setWaiting(true);
         
-        disk = diskList.get(idx);
-        condition.setDiskId(disk.getId());
-        try {
-            items = getter.createNewDiskFileItem(disk);
-        }catch(Exception e) {
-            logger.error("Scan Disk Error", e);
-            JOptionPane.showMessageDialog(frame, "扫描磁盘(" + disk.getBasePath() + ")错误，详情请看日志", "错误", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        try {
-            delCount = itemService.deleteByCondition(condition);
-        }catch(Exception e) {
-            logger.error("Delete FileItem by Disk Error", e);
-            JOptionPane.showMessageDialog(frame, "删除原来磁盘数据(" + disk.getId() + ")错误，详情请看日志", "错误", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        try {
-            if(items != null && items.size() > 0) {
-                for(FileItem item : items) {
-                    insCount += itemService.add(item);
+        new Thread() {
+            @Override
+            public void run() {
+                FileItemCondition condition = new FileItemCondition();
+                List<FileItem> items = null;
+                int insCount = 0, delCount = 0;
+
+                DiskDescription disk = diskList.get(idx);
+                condition.setDiskId(disk.getId());
+                processListener.setMax(1000);
+                
+                try {
+                    processListener.setPosition(100, "开始扫描目录：" + disk.getBasePath());
+                    items = getter.createNewDiskFileItem(disk);
+                }catch(Exception e) {
+                    logger.error("Scan Disk Error", e);
+                    JOptionPane.showMessageDialog(frame, "扫描磁盘(" + disk.getBasePath() + ")错误，详情请看日志", "错误", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
+                try {
+                    processListener.setPosition(200, "删除原目录数据");
+                    delCount = itemService.deleteByCondition(condition);
+                }catch(Exception e) {
+                    logger.error("Delete FileItem by Disk Error", e);
+                    JOptionPane.showMessageDialog(frame, "删除原来磁盘数据(" + disk.getId() + ")错误，详情请看日志", "错误", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                
+                long time1 = System.currentTimeMillis(), time2 = 0L, time3 = 0L, leftSecond = 0L;
+                try {
+                    if(items != null && items.size() > 0) {
+                        int current = 0, total = items.size();
+                        
+                        time3 = time2 = time1;
+                        
+                        for(int i=0; i<total; i++) {
+                            FileItem item = items.get(i);
+                            current = (int)(i * 800 / total) + 200;
+                            processListener.setPosition(current, 
+                                    "处理中，预计剩下 " + getShowTimeBySecond(leftSecond)  + "：" + item.getFileName());
+                            insCount += itemService.add(item);
+                            time2 = System.currentTimeMillis();
+                            leftSecond = (long)(((time2 - time1) * (total - i - 1)) / ((i + 1) * 1000));
+                        }
+                    }
+                }catch(Exception e) {
+                    logger.error("Insert FileItem by Disk Error", e);
+                    JOptionPane.showMessageDialog(frame, "新增磁盘数据(" + disk.getId() + ")错误，详情请看日志", "错误", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }finally {
+                    setWaiting(false);
+                    
+                    processListener.finish("扫描完成，总耗时" + getShowTimeBySecond((System.currentTimeMillis() - time1) / 1000));
+                }
+                JOptionPane.showMessageDialog(frame, 
+                        "重新扫描磁盘(" + disk.getBasePath() + ")成功，删除原来" + delCount + "条数据，新增" + insCount + "条数据。",
+                        "信息", JOptionPane.INFORMATION_MESSAGE);
             }
-        }catch(Exception e) {
-            logger.error("Insert FileItem by Disk Error", e);
-            JOptionPane.showMessageDialog(frame, "新增磁盘数据(" + disk.getId() + ")错误，详情请看日志", "错误", JOptionPane.ERROR_MESSAGE);
-            return;
+        }.start();
+    }
+    
+    private String getShowTimeBySecond(long second) {
+        StringBuilder sb = new StringBuilder();
+        if(second <= 0) {
+            return "计算中";
         }
-        JOptionPane.showMessageDialog(frame, 
-                "重新扫描磁盘(" + disk.getBasePath() + ")成功，删除原来" + delCount + "条数据，新增" + insCount + "条数据。",
-                "信息", JOptionPane.INFORMATION_MESSAGE);
+        if(second < 60) {
+            return second + "秒";
+        }
+        
+        int showSec = (int)(second % 60);
+        second /= 60;
+        if(second < 60) {
+            sb.append(second).append("分").append(showSec).append("秒");
+            return sb.toString();
+        }
+        
+        int showMin = (int)(second % 60);
+        second /= 60;
+        sb.append(second).append("小时").append(showMin).append("分").append(showSec).append("秒");
+        return sb.toString();
     }
     
     private void initData() {
@@ -340,7 +411,7 @@ public class StartUp {
         logger.info("config file: " + configFile.getAbsolutePath());
         configService = new MyStorageConfigServicePropertiesImpl(configFile);
         getter = new LocalSourceFileItemGetter();
-        order = null;
+        order = getDefaultOrder();
         pager = new Pager();
         
         FileScanner scanner = new PathScanner();
@@ -374,6 +445,7 @@ public class StartUp {
         reFlushDiskList();
         
         setFromConfig();
+        resetTableColumnWidth(dataTable);
     }
     
     private void initDB(File dbFile) {
@@ -569,6 +641,15 @@ public class StartUp {
         return model;
     }
     
+    private OrderBy getDefaultOrder() {
+        OrderBy defOrder = new OrderBy();
+        
+        defOrder.addOrderAsc("disk_id");
+        defOrder.addOrderAsc("file_name");
+        
+        return defOrder;
+    }
+    
     private void setFromConfig() {
         fileNameTf.setText(config.getSearchFileName());
         if(!Nullable.isNull(config.getSearchFileType())) {
@@ -587,7 +668,7 @@ public class StartUp {
                 }
             }
         }
-        pager.setPage(config.getPageSize());
+        pager.setSize(config.getPageSize());
         
         for(int i=0; i<config.getTableColumnWidth().size() && i<columnLength.length; i++) {
             columnLength[i] = config.getTableColumnWidth().get(i).intValue();
@@ -634,6 +715,7 @@ public class StartUp {
         
         settingBtn = new JButton("设置");
         panel08.add(settingBtn);
+        settingBtn.setEnabled(false);//TODO 设定暂未实现
         
         JPanel panel01 = new JPanel();
         paramPanel.add(panel01);
@@ -751,7 +833,7 @@ public class StartUp {
         dataTable.setModel(getEmptyModel());
         
         processTextTb = new JLabel("--");
-        processTextTb.setHorizontalAlignment(SwingConstants.CENTER);
+        processTextTb.setHorizontalAlignment(SwingConstants.LEFT);
         dataPanel.add(processTextTb, BorderLayout.NORTH);
         
         executeProcess = new JProgressBar();

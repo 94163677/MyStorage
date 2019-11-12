@@ -188,8 +188,9 @@ public abstract class BaseSqliteDAO<T> implements BaseModelDAO<T>{
             StringBuilder sb = new StringBuilder();
             sb.append(" ORDER BY ");
             for(String[] pair : order.getOrderPairs()) {
-                sb.append(pair[1]).append(' ').append(pair[0]).append(' ');
+                sb.append(pair[1]).append(' ').append(pair[0]).append(',');
             }
+            sb.deleteCharAt(sb.length() - 1);
             return sb.toString();
         }
         return "";
