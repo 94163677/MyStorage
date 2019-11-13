@@ -119,4 +119,15 @@ public class FileItem extends FileItemDTO{
         this.lastModDateStr = DateTimeUtil.getStringFromDateTime(lastModDate);
         this.lastModDate = lastModDate;
     }
+
+    public DiskDescription getDiskDescription() {
+        return diskDescription;
+    }
+
+    public void setDiskDescription(DiskDescription diskDescription) {
+        if(getDiskId() != diskDescription.getId()) {
+            throw new IllegalArgumentException("DiskDescription cannot match fileItem's diskId");
+        }
+        this.diskDescription = diskDescription;
+    }
 }

@@ -57,6 +57,13 @@ public class MyStorageConfigServicePropertiesImpl
             config.setSearchDiskPath(temp);
         }
         
+        temp = prop.getProperty("isScanWithHash");
+        if("true".equalsIgnoreCase(temp)) {
+            config.setIsScanWithHash("true");
+        }else {
+            config.setIsScanWithHash("false");
+        }
+        
         temp = prop.getProperty("pageSize");
         if(!Nullable.isNull(temp)) {
             try {
@@ -105,6 +112,7 @@ public class MyStorageConfigServicePropertiesImpl
         prop.put("searchFileName", config.getSearchFileName());
         prop.put("searchFileType", config.getSearchFileType());
         prop.put("searchDiskPath", config.getSearchDiskPath());
+        prop.put("isScanWithHash", config.getIsScanWithHash());
         
         prop.put("pageSize", ("" + config.getPageSize()));
         StringBuilder sb = new StringBuilder();

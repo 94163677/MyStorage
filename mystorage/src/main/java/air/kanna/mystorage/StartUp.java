@@ -2,21 +2,26 @@ package air.kanna.mystorage;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.security.MessageDigest;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -24,11 +29,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
+import javax.swing.JSlider;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.TableColumnModelEvent;
 import javax.swing.event.TableColumnModelListener;
@@ -53,11 +60,14 @@ import air.kanna.mystorage.dao.impl.sqlite.DiskDescriptionDAOSqliteImpl;
 import air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl;
 import air.kanna.mystorage.dao.impl.sqlite.init.SqliteInitialize;
 import air.kanna.mystorage.model.DiskDescription;
+import air.kanna.mystorage.model.FileHash;
 import air.kanna.mystorage.model.FileItem;
 import air.kanna.mystorage.model.FileType;
 import air.kanna.mystorage.service.DiskDescriptionService;
 import air.kanna.mystorage.service.FileItemService;
 import air.kanna.mystorage.service.SourceFileItemGetter;
+import air.kanna.mystorage.service.hash.HashService;
+import air.kanna.mystorage.service.hash.impl.LocalMsgDigestHashServiceImpl;
 import air.kanna.mystorage.service.impl.DiskDescriptionServiceImpl;
 import air.kanna.mystorage.service.impl.FileItemServiceImpl;
 import air.kanna.mystorage.service.impl.LocalSourceFileItemGetter;
@@ -78,6 +88,7 @@ public class StartUp {
     private JTextField fileNameTf;
     private JComboBox<String> fileTypeCb;
     private JComboBox<String> diskCb;
+    private JCheckBox scanWithHashCb;
     private JButton newDiskBtn;
     private JButton delDiskBtn;
     private JButton rescanBtn;
@@ -86,6 +97,7 @@ public class StartUp {
     private JButton prevBtn;
     private JButton nextBtn;
     private JButton settingBtn;
+    private JSlider pagerSlider;
     
     private MyStorageConfig config;
     private NewDiskDialog newDiskDialog;
@@ -95,13 +107,16 @@ public class StartUp {
     private FileItemService itemService;
     private DiskDescriptionService diskService;
     private SourceFileItemGetter getter;
+    private HashService hashService;
     
     private OrderBy order;
     private Pager pager;
 
     private TableColumnModelListener colummModelListener;
     private ProcessAndLabelProcListener processListener;
-    private int[] columnLength = new int[] {0, 0, 0, 0, 0, 0, 0};
+    private int[] columnLength = new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0};
+    
+    
     
 
     /**
@@ -236,6 +251,46 @@ public class StartUp {
             }
         });
         
+        pagerSlider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent arg0) {
+                pageNumLb.setText("" + pagerSlider.getValue());
+            }
+        });
+
+        pagerSlider.addMouseWheelListener(new MouseWheelListener() {
+            public void mouseWheelMoved(MouseWheelEvent event) {
+                if(pager.getTotal() <= 0) {
+                    return;
+                }
+                if(event.getWheelRotation() < 0) {
+                    if(pager.getPage() <= 1) {
+                        return;
+                    }
+                    pager.setPage(pager.getPage() - 1);
+                    doSearch();
+                }else
+                if(event.getWheelRotation() > 0) {
+                    if(pagerSlider.getValue() >= pagerSlider.getMaximum()) {
+                        return;
+                    }
+                    pager.setPage(pager.getPage() + 1);
+                    doSearch();
+                    
+                }
+                
+            }
+        });
+        
+        pagerSlider.addMouseListener(new MouseAdapter() {
+            public void mouseReleased(MouseEvent event) {
+                if(pager.getTotal() > 0) {
+                    pager.setPage(pagerSlider.getValue());
+                    doSearch();
+                }
+            }
+            
+        });
+        
         colummModelListener = new TableColumnModelListener() {
 
             @Override
@@ -327,6 +382,7 @@ public class StartUp {
                 FileItemCondition condition = new FileItemCondition();
                 List<FileItem> items = null;
                 int insCount = 0, delCount = 0;
+                boolean isHash = scanWithHashCb.isSelected();
 
                 DiskDescription disk = diskList.get(idx);
                 condition.setDiskId(disk.getId());
@@ -359,6 +415,11 @@ public class StartUp {
                         for(int i=0; i<total; i++) {
                             FileItem item = items.get(i);
                             current = (int)(i * 800 / total) + 200;
+                            
+                            if(isHash) {
+                                fillFileItemHash(item);
+                            }
+                            
                             processListener.setPosition(current, 
                                     "处理中，预计剩下 " + getShowTimeBySecond(leftSecond)  + "：" + item.getFileName());
                             insCount += itemService.add(item);
@@ -378,6 +439,30 @@ public class StartUp {
                 JOptionPane.showMessageDialog(frame, 
                         "重新扫描磁盘(" + disk.getBasePath() + ")成功，删除原来" + delCount + "条数据，新增" + insCount + "条数据。",
                         "信息", JOptionPane.INFORMATION_MESSAGE);
+            }
+            
+            private void fillFileItemHash(FileItem item) {
+                try {
+                    setFileItemHash(
+                            hashService.getFileItemHashString(item), item);
+                }catch(Exception e) {
+                    logger.warn("Fill hash error.", e);
+                }
+            }
+            
+            private void setFileItemHash(Map<String, String> hash, FileItem item) {
+                if(hash == null || item == null || hash.size() <= 0) {
+                    return;
+                }
+                String hashStr = hash.get(FileHash.MD5.getValue());
+                if(StringUtil.isNotSpace(hashStr)) {
+                    item.setFileHash01(hashStr);
+                }
+                
+                hashStr = hash.get(FileHash.SHA256.getValue());
+                if(StringUtil.isNotSpace(hashStr)) {
+                    item.setFileHash02(hashStr);
+                }
             }
         }.start();
     }
@@ -409,10 +494,21 @@ public class StartUp {
         
         File configFile = new File(CONFIG_FILE);
         logger.info("config file: " + configFile.getAbsolutePath());
+        
         configService = new MyStorageConfigServicePropertiesImpl(configFile);
         getter = new LocalSourceFileItemGetter();
         order = getDefaultOrder();
         pager = new Pager();
+        hashService = new LocalMsgDigestHashServiceImpl();
+        
+        try {
+            for(int i=0; i<FileHash.values().length; i++) {
+                ((LocalMsgDigestHashServiceImpl)hashService)
+                    .addMessageDigest(MessageDigest.getInstance(FileHash.values()[i].getValue()));
+            }
+        }catch(Exception e) {
+            logger.warn("Get MessageDigest Error.", e);
+        }
         
         FileScanner scanner = new PathScanner();
         ((LocalSourceFileItemGetter)getter).setScanner(scanner);
@@ -461,6 +557,7 @@ public class StartUp {
             
             ((DiskDescriptionServiceImpl)diskService).setModelDao((DiskDescriptionDAO)diskDao);
             ((FileItemServiceImpl)itemService).setModelDao(itemDao);
+            ((FileItemServiceImpl)itemService).setDiskService(diskService);
             
         }catch(Exception e) {
             logger.error("initDB error: ", e);
@@ -584,6 +681,10 @@ public class StartUp {
         }else {
             nextBtn.setEnabled(false);
         }
+
+        pagerSlider.setMinimum(1);
+        pagerSlider.setMaximum(total);
+        pagerSlider.setValue(pager.getPage());
     }
     
     private void resetTableColumnWidth(JTable table) {
@@ -612,7 +713,11 @@ public class StartUp {
         }
         for(FileItem item: itemList) {
             Vector<String> rows = new Vector<>();
-            DiskDescription disk = getDiskById(item.getDiskId());
+            DiskDescription disk = item.getDiskDescription();
+            
+            if(disk == null) {
+                disk = getDiskById(item.getDiskId());
+            }
             
             rows.add(disk == null ? "NULL" : disk.getBasePath());
             rows.add(item.getFileName());
@@ -620,6 +725,8 @@ public class StartUp {
             rows.add("" + item.getFileSize());
             rows.add(item.getFilePath());
             rows.add(item.getLastModDateStr());
+            rows.add(item.getFileHash01() == null ? "" : item.getFileHash01());
+            rows.add(item.getFileHash02() == null ? "" : item.getFileHash02());
             rows.add(item.getRemark());
             
             model.addRow(rows);
@@ -636,8 +743,10 @@ public class StartUp {
         model.addColumn("文件大小");
         model.addColumn("文件路径");
         model.addColumn("最后修改日期");
+        model.addColumn("MD5");
+        model.addColumn("SHA256");
         model.addColumn("备注");
-        
+
         return model;
     }
     
@@ -670,6 +779,12 @@ public class StartUp {
         }
         pager.setSize(config.getPageSize());
         
+        if("true".equalsIgnoreCase(config.getIsScanWithHash())) {
+            scanWithHashCb.setSelected(true);
+        }else {
+            scanWithHashCb.setSelected(false);
+        }
+        
         for(int i=0; i<config.getTableColumnWidth().size() && i<columnLength.length; i++) {
             columnLength[i] = config.getTableColumnWidth().get(i).intValue();
         }
@@ -686,6 +801,12 @@ public class StartUp {
             config.setSearchDiskPath((String)diskCb.getSelectedItem());
         }else {
             config.setSearchDiskPath("");
+        }
+        
+        if(scanWithHashCb.isSelected()) {
+            config.setIsScanWithHash("true");
+        }else {
+            config.setIsScanWithHash("false");
         }
         
         config.getTableColumnWidth().clear();
@@ -707,7 +828,7 @@ public class StartUp {
         
         JPanel paramPanel = new JPanel();
         frame.getContentPane().add(paramPanel, BorderLayout.WEST);
-        paramPanel.setLayout(new GridLayout(8, 1, 0, 0));
+        paramPanel.setLayout(new GridLayout(9, 1, 0, 0));
         
         
         JPanel panel08 = new JPanel();
@@ -748,17 +869,22 @@ public class StartUp {
         
         JPanel panel04 = new JPanel();
         paramPanel.add(panel04);
-        JPanel panel05 = new JPanel();
-        
-        
-        paramPanel.add(panel05);
-        panel05.setLayout(new GridLayout(1, 3, 0, 0));
+
+        panel04.setLayout(new GridLayout(1, 3, 0, 0));
         newDiskBtn = new JButton("新增磁盘");
-        panel05.add(newDiskBtn);
+        panel04.add(newDiskBtn);
         delDiskBtn = new JButton("删除磁盘");
-        panel05.add(delDiskBtn);
+        panel04.add(delDiskBtn);
         rescanBtn = new JButton("重新扫描");
-        panel05.add(rescanBtn);
+        panel04.add(rescanBtn);
+        
+        
+        JPanel panel05 = new JPanel();
+        paramPanel.add(panel05);
+        panel05.setLayout(new GridLayout(2, 2, 0, 0));
+        
+        scanWithHashCb = new JCheckBox("扫描磁盘同时计算Hash");
+        panel05.add(scanWithHashCb);
         
         
         JPanel panel06 = new JPanel();
@@ -771,53 +897,51 @@ public class StartUp {
         
         
         JPanel panel07 = new JPanel();
-        JPanel panel09 = new JPanel();
-        prevBtn = new JButton("上一页");
-        nextBtn = new JButton("下一页");
         paramPanel.add(panel07);
+        panel07.setLayout(new GridLayout(2, 1, 0, 0));
         
-        GridBagLayout gridBagLayout = new GridBagLayout();
-        GridBagConstraints constraints = new GridBagConstraints();
-        
-        panel07.setLayout(gridBagLayout);
-        
-        constraints.fill = GridBagConstraints.BOTH;
-        constraints.weightx = 1.0;
-        constraints.weighty = 1.0;
-        constraints.gridheight = 1;
-        constraints.gridwidth = GridBagConstraints.REMAINDER;
-        gridBagLayout.setConstraints(panel09, constraints);
-        panel07.add(panel09);
-        
-        constraints.gridheight = 1;
-        constraints.gridwidth = 1;
-        gridBagLayout.setConstraints(prevBtn, constraints);
-        
-        panel07.add(prevBtn);
-        gridBagLayout.setConstraints(nextBtn, constraints);
-        panel07.add(nextBtn);
+        JPanel panel10 = new JPanel();
+        panel07.add(panel10);
         
         JLabel label_3 = new JLabel("页数：");
-        panel09.add(label_3);
+        panel10.add(label_3);
         
         pageNumLb = new JLabel("-");
-        panel09.add(pageNumLb);
+        panel10.add(pageNumLb);
         
         JLabel label_4 = new JLabel(" / ");
-        panel09.add(label_4);
+        panel10.add(label_4);
         
         totalPageLb = new JLabel("-");
-        panel09.add(totalPageLb);
+        panel10.add(totalPageLb);
         
         JLabel label_6 = new JLabel(" ; ");
-        panel09.add(label_6);
+        panel10.add(label_6);
         
         JLabel label_7 = new JLabel("总条数：");
-        panel09.add(label_7);
+        panel10.add(label_7);
         
         totalItemLb = new JLabel("-");
-        panel09.add(totalItemLb);
-
+        panel10.add(totalItemLb);
+        
+        JPanel panel11 = new JPanel();
+        panel07.add(panel11);
+        
+        pagerSlider = new JSlider();
+        pagerSlider.setMinimum(1);
+        pagerSlider.setMaximum(1);
+        pagerSlider.setValue(1);
+        panel11.add(pagerSlider);
+        
+        
+        JPanel panel09 = new JPanel();
+        paramPanel.add(panel09);
+        panel09.setLayout(new GridLayout(1, 2, 0, 0));
+        prevBtn = new JButton("上一页");
+        panel09.add(prevBtn);
+        nextBtn = new JButton("下一页");
+        panel09.add(nextBtn);
+        
         prevBtn.setEnabled(false);
         nextBtn.setEnabled(false);
         
@@ -826,7 +950,12 @@ public class StartUp {
         frame.getContentPane().add(dataPanel, BorderLayout.CENTER);
         dataPanel.setLayout(new BorderLayout(0, 0));
         
-        dataTable = new JTable();
+        dataTable = new JTable() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         dataTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         dataTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         dataPanel.add(new JScrollPane(dataTable), BorderLayout.CENTER);

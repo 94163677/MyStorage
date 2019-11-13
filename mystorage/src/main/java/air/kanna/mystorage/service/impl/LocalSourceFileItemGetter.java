@@ -74,8 +74,10 @@ public class LocalSourceFileItemGetter implements SourceFileItemGetter {
         item.setFilePath(path);
         
         readFileTimes(file, item);
+        FileItem fileItem = new FileItem(item);
+        fileItem.setDiskDescription(disk);
         
-        return new FileItem(item);
+        return fileItem;
     }
     
     private void readFileTimes(File file, FileItemDTO item) {

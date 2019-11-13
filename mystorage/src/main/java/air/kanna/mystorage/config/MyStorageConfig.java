@@ -13,6 +13,7 @@ public class MyStorageConfig {
     private String searchFileName = "";
     private String searchFileType = "";
     private String searchDiskPath = "";
+    private String isScanWithHash = "false";
     
     private int pageSize = DEFAULT_PAGE_SIZE;
     private List<Integer> tableColumnWidth = new ArrayList<>();
@@ -64,5 +65,11 @@ public class MyStorageConfig {
     }
     public void setTableColumnWidth(List<Integer> tableColumnWidth) {
         this.tableColumnWidth = tableColumnWidth;
+    }
+    public String getIsScanWithHash() {
+        return isScanWithHash;
+    }
+    public void setIsScanWithHash(String isScanWithHash) {
+        this.isScanWithHash = isScanWithHash;
     }
 }
