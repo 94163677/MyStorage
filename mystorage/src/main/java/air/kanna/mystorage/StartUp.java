@@ -48,6 +48,8 @@ import org.apache.log4j.Logger;
 import air.kanna.kindlesync.scan.FileScanner;
 import air.kanna.kindlesync.scan.PathScanner;
 import air.kanna.kindlesync.util.Nullable;
+import air.kanna.mystorage.backup.BackupService;
+import air.kanna.mystorage.backup.impl.LocalBackupServiceImpl;
 import air.kanna.mystorage.config.MyStorageConfig;
 import air.kanna.mystorage.config.MyStorageConfigService;
 import air.kanna.mystorage.config.impl.MyStorageConfigServicePropertiesImpl;
@@ -97,6 +99,7 @@ public class StartUp {
     private JButton prevBtn;
     private JButton nextBtn;
     private JButton settingBtn;
+    private JButton backupBtn;
     private JSlider pagerSlider;
     
     private MyStorageConfig config;
@@ -108,6 +111,7 @@ public class StartUp {
     private DiskDescriptionService diskService;
     private SourceFileItemGetter getter;
     private HashService hashService;
+    private BackupService backupService;
     
     private OrderBy order;
     private Pager pager;
@@ -116,6 +120,8 @@ public class StartUp {
     private ProcessAndLabelProcListener processListener;
     private int[] columnLength = new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0};
     
+    private File dbFile;
+    private File backupPath;
     
     
 
@@ -139,6 +145,10 @@ public class StartUp {
         rescanBtn.setEnabled(enable);
         resetBtn.setEnabled(enable);
         searchBtn.setEnabled(enable);
+        backupBtn.setEnabled(enable);
+        scanWithHashCb.setEnabled(enable);
+        pagerSlider.setEnabled(enable);
+        
         if(enable) {
             resetPage();
         }else {
@@ -248,6 +258,12 @@ public class StartUp {
                 }
                 pager.setPage(pager.getPage() + 1);
                 doSearch();
+            }
+        });
+        
+        backupBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                backupData();
             }
         });
         
@@ -500,6 +516,7 @@ public class StartUp {
         order = getDefaultOrder();
         pager = new Pager();
         hashService = new LocalMsgDigestHashServiceImpl();
+        backupService = new LocalBackupServiceImpl();
         
         try {
             for(int i=0; i<FileHash.values().length; i++) {
@@ -519,29 +536,47 @@ public class StartUp {
         }
         pager.setTotal(-1);
         pager.setSize(50);
+        ((LocalBackupServiceImpl)backupService).setBackupByDate("true".equalsIgnoreCase(config.getIsBackupByDate()));
+        ((LocalBackupServiceImpl)backupService).setMaxBackupDay(config.getMaxBackupDay());
+        ((LocalBackupServiceImpl)backupService).setMaxBackupNum(config.getMaxBackupNum());
+        
         
         File tmpPath = new File(config.getDbPath());
-        if(tmpPath.exists() && tmpPath.isFile()) {
-            JOptionPane.showMessageDialog(frame, "数据库目录不是目录", "错误", JOptionPane.ERROR_MESSAGE);
-            System.exit(1);
-        }
-        if(!tmpPath.exists()) {
-            if(!tmpPath.mkdirs()) {
-                JOptionPane.showMessageDialog(frame, "数据库目创建失败", "错误", JOptionPane.ERROR_MESSAGE);
-                System.exit(1);
-            }
-        }
-        tmpPath = new File(
+        backupPath = new File(config.getBackPath());
+        
+        checkAndCreatePath(tmpPath, "数据库目录");
+        checkAndCreatePath(backupPath, "备份目录");
+        
+        dbFile = new File(
                 new StringBuilder().append(tmpPath.getAbsolutePath())
                     .append(File.separator)
                     .append(config.getDbFileName())
                     .toString());
         
-        initDB(tmpPath);
+        initDB(dbFile);
         reFlushDiskList();
         
         setFromConfig();
         resetTableColumnWidth(dataTable);
+        
+        if("true".equalsIgnoreCase(config.getIsAutoBackup())) {
+            backupData();
+        }
+    }
+    
+    private void checkAndCreatePath(File path, String showMsg) {
+        if(path.exists() && path.isFile()) {
+            JOptionPane.showMessageDialog(
+                    frame, (showMsg + "不是目录：" + path.getAbsolutePath()), "错误", JOptionPane.ERROR_MESSAGE);
+            System.exit(1);
+        }
+        if(!path.exists()) {
+            if(!path.mkdirs()) {
+                JOptionPane.showMessageDialog(
+                        frame, (showMsg + "创建失败：" + path.getAbsolutePath()), "错误", JOptionPane.ERROR_MESSAGE);
+                System.exit(1);
+            }
+        }
     }
     
     private void initDB(File dbFile) {
@@ -814,6 +849,29 @@ public class StartUp {
             config.getTableColumnWidth().add(columnLength[i]);
         }
     }
+    
+    private void backupData() {
+        setWaiting(true);
+        String str = processTextTb.getText();
+        processTextTb.setText("正在备份...");
+        try {
+            if(backupService.backup(dbFile, backupPath)) {
+                JOptionPane.showMessageDialog(frame, 
+                        "备份数据成功。",
+                        "信息", JOptionPane.INFORMATION_MESSAGE);
+            }else {
+                JOptionPane.showMessageDialog(frame, 
+                        "备份数据失败，详情请查看日志", 
+                        "错误", JOptionPane.ERROR_MESSAGE);
+            }
+        }catch(Exception e) {
+            logger.error("backup error", e);
+            JOptionPane.showMessageDialog(frame, "备份数据失败，详情请查看日志", "错误", JOptionPane.ERROR_MESSAGE);
+        }finally {
+            processTextTb.setText(str);
+            setWaiting(false);
+        }
+    }
 
     /**
      * Initialize the contents of the frame.
@@ -833,9 +891,18 @@ public class StartUp {
         
         JPanel panel08 = new JPanel();
         paramPanel.add(panel08);
-        
+        panel08.setLayout(new GridLayout(2, 3, 0, 0));
+
         settingBtn = new JButton("设置");
+        backupBtn = new JButton("备份");
+        
+        panel08.add(new JLabel(""));
         panel08.add(settingBtn);
+        panel08.add(new JLabel(""));
+        panel08.add(new JLabel(""));
+        panel08.add(backupBtn);
+        panel08.add(new JLabel(""));
+        
         settingBtn.setEnabled(false);//TODO 设定暂未实现
         
         JPanel panel01 = new JPanel();

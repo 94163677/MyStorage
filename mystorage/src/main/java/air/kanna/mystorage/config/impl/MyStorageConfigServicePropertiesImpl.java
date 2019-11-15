@@ -64,6 +64,44 @@ public class MyStorageConfigServicePropertiesImpl
             config.setIsScanWithHash("false");
         }
         
+        temp = prop.getProperty("isAutoBackup");
+        if("true".equalsIgnoreCase(temp)) {
+            config.setIsAutoBackup("true");
+        }else {
+            config.setIsAutoBackup("false");
+        }
+        
+        temp = prop.getProperty("isBackupByDate");
+        if("true".equalsIgnoreCase(temp)) {
+            config.setIsBackupByDate("true");
+        }else {
+            config.setIsBackupByDate("false");
+        }
+        
+        temp = prop.getProperty("maxBackupNum");
+        if(!Nullable.isNull(temp)) {
+            try {
+                int backNum = Integer.parseInt(temp);
+                if(backNum > 0) {
+                    config.setMaxBackupNum(backNum);
+                }
+            }catch(Exception e) {
+                logger.warn("parse page size error", e);
+            }
+        }
+        
+        temp = prop.getProperty("maxBackupDay");
+        if(!Nullable.isNull(temp)) {
+            try {
+                int backDay = Integer.parseInt(temp);
+                if(backDay > 0) {
+                    config.setMaxBackupDay(backDay);
+                }
+            }catch(Exception e) {
+                logger.warn("parse page size error", e);
+            }
+        }
+
         temp = prop.getProperty("pageSize");
         if(!Nullable.isNull(temp)) {
             try {
@@ -115,6 +153,12 @@ public class MyStorageConfigServicePropertiesImpl
         prop.put("isScanWithHash", config.getIsScanWithHash());
         
         prop.put("pageSize", ("" + config.getPageSize()));
+        prop.put("isAutoBackup", config.getIsAutoBackup());
+        prop.put("isBackupByDate", config.getIsBackupByDate());
+        prop.put("maxBackupNum", ("" + config.getMaxBackupNum()));
+        prop.put("maxBackupDay", ("" + config.getMaxBackupDay()));
+        
+        
         StringBuilder sb = new StringBuilder();
         for(Integer width : config.getTableColumnWidth()) {
             if(width != null) {
