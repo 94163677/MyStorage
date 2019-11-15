@@ -92,6 +92,31 @@ public class NumberUtil {
     }
     
     /**
+     * 把拥有前补零的数字字符串解析成Long数字
+     * @param fixedNumber 
+     * @return 如果没有报错，返回非空的数字，有报错返回空
+     */
+    public static Long fromFixedLength(String fixedNumber) {
+        if(StringUtil.isSpace(fixedNumber)) {
+            return null;
+        }
+        int idx = 0;
+        for(;idx<fixedNumber.length(); idx++) {
+            if(fixedNumber.charAt(idx) != '0') {
+                break;
+            }
+        }
+        if(idx >= fixedNumber.length()) {
+            return new Long(0L);
+        }
+        try {
+            return new Long(Long.parseLong(fixedNumber.substring(idx)));
+        }catch(Exception e) {
+            return null;
+        }
+    }
+    
+    /**
      * hex字符转数字
      * @param ch 字符
      * @return 数字
