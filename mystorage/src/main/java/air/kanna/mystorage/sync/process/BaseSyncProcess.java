@@ -64,14 +64,19 @@ public abstract class BaseSyncProcess {
         socket.close();
     }
     
-    protected void finish() throws Exception{
+    public void finish() throws Exception{
         OperMessage reply = new OperMessage();
 
         reply.setMessageType(OperMessage.MSG_END);
         reply.setMessage("");
         
         sendMessage(reply);
+        isBreak = true;
         socket.close();
+    }
+    
+    public boolean isFinish() {
+        return isBreak;
     }
     
     private void dealInput(InputStream ins) throws Exception{
@@ -153,7 +158,9 @@ public abstract class BaseSyncProcess {
         // 5 生成字符串
         String msgJson = new String(orgBytes, CHARSET);
         // 6 根据Json生成实体消息类
-        return JSON.parseObject(msgJson, OperMessage.class);
+        OperMessage msg = JSON.parseObject(msgJson, OperMessage.class);
+        
+        return msg;
     }
     
     protected String getMessageString(OperMessage msg) throws Exception{
@@ -171,6 +178,8 @@ public abstract class BaseSyncProcess {
         // 5 加密
         byte[] encBytes = cipher.doFinal(msgJson.getBytes(CHARSET));
         // 6 生成HEX字符串
-        return NumberUtil.toHexString(encBytes);
+        String hex = NumberUtil.toHexString(encBytes);
+        
+        return hex;
     }
 }

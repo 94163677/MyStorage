@@ -1,12 +1,9 @@
 package air.kanna.mystorage.sync.process;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.net.Socket;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,23 +20,15 @@ import air.kanna.mystorage.util.NumberUtil;
 
 public class LocalFileReceiveSyncProcess extends BaseSyncProcess {
     private static final Logger logger = Logger.getLogger(LocalFileSendSyncProcess.class);
-    private static final int DEFAULT_BLOCK_SIZE = 50 * 1024;//默认块大小：50KB
     
     private File baseFile;
-    private boolean isSend = false;
     private List<FileInforProcess> fileList = new ArrayList<>();
+    private boolean isFinish = true;
     
     public LocalFileReceiveSyncProcess(ConnectParam param, File file) {
         super(param);
         if(file == null) {
             throw new NullPointerException("Send or Receive File is null");
-        }
-        if(file.isFile()) {
-            if(!file.exists()) {
-                throw new IllegalArgumentException("Send file not exists");
-            }
-            baseFile = file;
-            isSend = true;
         }
         if(file.isDirectory()) {
             if(!file.exists()) {
@@ -48,57 +37,32 @@ public class LocalFileReceiveSyncProcess extends BaseSyncProcess {
                 }
             }
             baseFile = file;
+        }else{
+            throw new IllegalArgumentException("Unknow file: " + file.getAbsolutePath());
         }
-        throw new IllegalArgumentException("Unknow file: " + file.getAbsolutePath());
     }
-
-    
 
     @Override
-    protected void doStart(OperMessage msg) throws Exception {
-        if(!isSend) {
-            return;
+    public void start(Socket socket) throws Exception{
+        if(socket == null || socket.isClosed()) {
+            throw new IllegalArgumentException("Socket is null or closed");
         }
-        OutputStream ous = socket.getOutputStream();
-        InputStream ins = new BufferedInputStream(new FileInputStream(baseFile), (10 * DEFAULT_BLOCK_SIZE));
-        FileInformation info = new FileInformation();
-        OperMessage message = new OperMessage();
-        
-        byte[] buffer = new byte[DEFAULT_BLOCK_SIZE];
-        int fileId = (int)(Math.random() * Integer.MAX_VALUE);
-        int readed = -1, count = 1;
-        
-        info.setFileId(fileId);
-        info.setFileSize(baseFile.length());
-        info.setDataSize(DEFAULT_BLOCK_SIZE);
-        info.setFileName(baseFile.getName());
-        info.setFileHash("");
-        
-        message.setMessageType(OperMessage.MSG_DATA);
-        message.setMessage(JSON.toJSONString(info));
-        
-        sendMessage(message);
-        
-        message = new OperMessage();
-        message.setMessageType(OperMessage.MSG_DATA);
-        
-        for(readed=ins.read(buffer); readed>0; readed=ins.read(buffer)) {
-            FileData data = new FileData();
-            
-            data.setFileId(info.getFileId());
-            data.setDataNum(count);
-            data.setData(NumberUtil.toHexString(buffer));
-            message.setMessage(JSON.toJSONString(data));
-            
-            sendMessage(message);
-        }
+        isBreak = false;
+        this.socket = socket;
+        OperMessage reply = new OperMessage();
+
+        reply.setMessageType(OperMessage.MSG_CONNECT);
+        reply.setMessage("");
+        sendMessage(reply);
+
+        super.start(socket);
     }
+
+    @Override
+    protected void doStart(OperMessage msg) throws Exception {}
 
     @Override
     protected void doData(OperMessage msg) throws Exception {
-        if(isSend) {
-            return;
-        }
         String json = msg.getMessage();
         
         if(json.startsWith(FileInformation.class.getName())) {
@@ -131,8 +95,10 @@ public class LocalFileReceiveSyncProcess extends BaseSyncProcess {
             throw new RuntimeException("FileData dataSize error: " + fileData.getData());
         }
         if(proc.getMaxBlock() <= fileData.getDataNum()) {
+            proc.getCheckDigest().update(data, 0, proc.getLastBlockSize());
             proc.getOutStream().write(data, 0, proc.getLastBlockSize());
         }else {
+            proc.getCheckDigest().update(data);
             proc.getOutStream().write(data);
         }
     }
@@ -151,7 +117,7 @@ public class LocalFileReceiveSyncProcess extends BaseSyncProcess {
         }
         proc.setOutStream(
                 new BufferedOutputStream(
-                        new FileOutputStream(tranFile), (10 * DEFAULT_BLOCK_SIZE)));
+                        new FileOutputStream(tranFile), (10 * fileInfo.getDataSize())));
         fileList.add(proc);
     }
     
@@ -172,6 +138,7 @@ public class LocalFileReceiveSyncProcess extends BaseSyncProcess {
         
         fileList.remove(proc);
         if(fileList.size() <= 0) {
+            isBreak = true;
             finish();
         }
     }
