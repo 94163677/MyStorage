@@ -21,9 +21,10 @@ import air.kanna.mystorage.util.NumberUtil;
 public class LocalFileReceiveSyncProcess extends BaseSyncProcess {
     private static final Logger logger = Logger.getLogger(LocalFileSendSyncProcess.class);
     
+    public static final String TRANS_TEMP_FILE_END = ".tns";
+    
     private File baseFile;
     private List<FileInforProcess> fileList = new ArrayList<>();
-    private boolean isFinish = true;
     
     public LocalFileReceiveSyncProcess(ConnectParam param, File file) {
         super(param);
@@ -101,13 +102,14 @@ public class LocalFileReceiveSyncProcess extends BaseSyncProcess {
             proc.getCheckDigest().update(data);
             proc.getOutStream().write(data);
         }
+        listener.setPosition(fileData.getDataNum(), null);
     }
     
     private void doNewInputFile(FileInformation fileInfo) throws Exception {
         FileInforProcess proc = new FileInforProcess(fileInfo);
         
         proc.setCheckDigest(MessageDigest.getInstance("MD5"));
-        proc.setFileName(fileInfo.getFileName() + "." + fileInfo.getFileId() + ".tns");
+        proc.setFileName(fileInfo.getFileName() + "." + fileInfo.getFileId() + TRANS_TEMP_FILE_END);
         
         File tranFile = new File(baseFile, proc.getFileName());
         if(tranFile.exists()) {
@@ -118,6 +120,10 @@ public class LocalFileReceiveSyncProcess extends BaseSyncProcess {
         proc.setOutStream(
                 new BufferedOutputStream(
                         new FileOutputStream(tranFile), (10 * fileInfo.getDataSize())));
+        
+        listener.setMax(proc.getMaxBlock());
+        listener.setPosition(0, fileInfo.getFileName());
+        
         fileList.add(proc);
     }
     
@@ -137,6 +143,9 @@ public class LocalFileReceiveSyncProcess extends BaseSyncProcess {
         }
         
         fileList.remove(proc);
+        
+        listener.finish(fileInfo.getFileName());
+        
         if(fileList.size() <= 0) {
             isBreak = true;
             finish();

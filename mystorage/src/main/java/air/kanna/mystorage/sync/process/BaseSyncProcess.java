@@ -1,5 +1,6 @@
 package air.kanna.mystorage.sync.process;
 
+import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -11,6 +12,7 @@ import org.apache.log4j.Logger;
 
 import com.alibaba.fastjson.JSON;
 
+import air.kanna.kindlesync.ProcessListener;
 import air.kanna.mystorage.sync.model.ConnectParam;
 import air.kanna.mystorage.sync.model.OperMessage;
 import air.kanna.mystorage.util.NumberUtil;
@@ -18,6 +20,8 @@ import air.kanna.mystorage.util.StringUtil;
 
 public abstract class BaseSyncProcess {
     private static final Logger logger = Logger.getLogger(BaseSyncProcess.class);
+    
+    public static final int DEFAULT_BLOCK_SIZE = 50 * 1024;//默认块大小：50KB
     
     protected static final int KEY_LENGTH = 128 / 8;//默认128位
     protected static final String ALGORITHM = "AES";
@@ -29,6 +33,7 @@ public abstract class BaseSyncProcess {
     protected Socket socket;
     protected byte[] key;
     protected boolean isBreak = false;
+    protected ProcessListener listener = getNullProcessListener();
     
     protected abstract void doStart(OperMessage msg) throws Exception;
     protected abstract void doData(OperMessage msg) throws Exception;
@@ -60,23 +65,40 @@ public abstract class BaseSyncProcess {
         isBreak = false;
         this.socket = socket;
         
-        dealInput(socket.getInputStream());
+        dealInput(new BufferedInputStream(socket.getInputStream(), 10 * DEFAULT_BLOCK_SIZE));
         socket.close();
     }
     
     public void finish() throws Exception{
-        OperMessage reply = new OperMessage();
+        if(!socket.isClosed()) {
+            OperMessage reply = new OperMessage();
 
-        reply.setMessageType(OperMessage.MSG_END);
-        reply.setMessage("");
-        
-        sendMessage(reply);
-        isBreak = true;
-        socket.close();
+            reply.setMessageType(OperMessage.MSG_END);
+            reply.setMessage("");
+
+            sendMessage(reply);
+            isBreak = true;
+            if (!socket.isClosed()) {
+                socket.close();
+            }
+        }else{
+            isBreak = true;
+        }
     }
     
     public boolean isFinish() {
         return isBreak;
+    }
+    
+    public ProcessListener getListener() {
+        return listener;
+    }
+
+    public void setListener(ProcessListener listener) {
+        if(listener == null){
+            listener = getNullProcessListener();
+        }
+        this.listener = listener;
     }
     
     private void dealInput(InputStream ins) throws Exception{
@@ -181,5 +203,18 @@ public abstract class BaseSyncProcess {
         String hex = NumberUtil.toHexString(encBytes);
         
         return hex;
+    }
+    
+    private ProcessListener getNullProcessListener(){
+        return new ProcessListener(){
+            @Override
+            public void setMax(int max) {}
+            @Override
+            public void next(String message) {}
+            @Override
+            public void setPosition(int current, String message) {}
+            @Override
+            public void finish(String message) {}
+        };
     }
 }
