@@ -73,6 +73,7 @@ import air.kanna.mystorage.service.hash.impl.LocalMsgDigestHashServiceImpl;
 import air.kanna.mystorage.service.impl.DiskDescriptionServiceImpl;
 import air.kanna.mystorage.service.impl.FileItemServiceImpl;
 import air.kanna.mystorage.service.impl.LocalSourceFileItemGetter;
+import air.kanna.mystorage.sync.SyncDBFileDialog;
 import air.kanna.mystorage.util.StringUtil;
 
 public class StartUp {
@@ -100,10 +101,12 @@ public class StartUp {
     private JButton nextBtn;
     private JButton settingBtn;
     private JButton backupBtn;
+    private JButton syncBtn;
     private JSlider pagerSlider;
     
     private MyStorageConfig config;
     private NewDiskDialog newDiskDialog;
+    private SyncDBFileDialog syncDialog;
     private List<DiskDescription> diskList;
     
     private MyStorageConfigService configService;
@@ -146,6 +149,7 @@ public class StartUp {
         resetBtn.setEnabled(enable);
         searchBtn.setEnabled(enable);
         backupBtn.setEnabled(enable);
+        syncBtn.setEnabled(enable);
         scanWithHashCb.setEnabled(enable);
         pagerSlider.setEnabled(enable);
         
@@ -251,8 +255,7 @@ public class StartUp {
         
         nextBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                int total = 1 + (int)(pager.getTotal() / pager.getSize());
-                if(pager.getPage() >= total) {
+                if(pager.getPage() >= pager.getMaxPage()) {
                     JOptionPane.showMessageDialog(frame, "已经是最后一页", "提示", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
@@ -264,6 +267,23 @@ public class StartUp {
         backupBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 backupData();
+            }
+        });
+        
+        syncBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                setWaiting(true);
+                try {
+                    syncDialog = new SyncDBFileDialog(dbFile, frame);
+                    syncDialog.setModal(true);
+                    syncDialog.setVisible(true);
+                }catch(RuntimeException e) {
+                    JOptionPane.showMessageDialog(frame, e.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
+                }catch(Exception e) {
+                    JOptionPane.showMessageDialog(frame, "同步准备出错，详情请查看日志", "错误", JOptionPane.ERROR_MESSAGE);
+                }finally {
+                    setWaiting(false);
+                }
             }
         });
         
@@ -359,12 +379,12 @@ public class StartUp {
         try {
             delCount = diskService.deleteById(disk.getId());
             if(delCount <= 0) {
-                JOptionPane.showMessageDialog(frame, "删除磁盘(" + disk.getId() + ")失败，详情请看日志", "错误", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(frame, "删除磁盘(" + disk.getId() + ")失败，详情请查看日志", "错误", JOptionPane.ERROR_MESSAGE);
                 return;
             }
         }catch(Exception e) {
             logger.error("Delete FileItem by Disk Error", e);
-            JOptionPane.showMessageDialog(frame, "删除磁盘(" + disk.getId() + ")失败，详情请看日志", "错误", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(frame, "删除磁盘(" + disk.getId() + ")失败，详情请查看日志", "错误", JOptionPane.ERROR_MESSAGE);
             return;
         }
         delCount = 0;
@@ -372,7 +392,7 @@ public class StartUp {
             delCount = itemService.deleteByCondition(condition);
         }catch(Exception e) {
             logger.error("Delete FileItem by Disk Error", e);
-            JOptionPane.showMessageDialog(frame, "删除原来磁盘数据(" + disk.getId() + ")错误，详情请看日志", "错误", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(frame, "删除原来磁盘数据(" + disk.getId() + ")错误，详情请查看日志", "错误", JOptionPane.ERROR_MESSAGE);
             return;
         }
         JOptionPane.showMessageDialog(frame, 
@@ -409,7 +429,7 @@ public class StartUp {
                     items = getter.createNewDiskFileItem(disk);
                 }catch(Exception e) {
                     logger.error("Scan Disk Error", e);
-                    JOptionPane.showMessageDialog(frame, "扫描磁盘(" + disk.getBasePath() + ")错误，详情请看日志", "错误", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(frame, "扫描磁盘(" + disk.getBasePath() + ")错误，详情请查看日志", "错误", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 try {
@@ -417,7 +437,7 @@ public class StartUp {
                     delCount = itemService.deleteByCondition(condition);
                 }catch(Exception e) {
                     logger.error("Delete FileItem by Disk Error", e);
-                    JOptionPane.showMessageDialog(frame, "删除原来磁盘数据(" + disk.getId() + ")错误，详情请看日志", "错误", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(frame, "删除原来磁盘数据(" + disk.getId() + ")错误，详情请查看日志", "错误", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 
@@ -445,7 +465,7 @@ public class StartUp {
                     }
                 }catch(Exception e) {
                     logger.error("Insert FileItem by Disk Error", e);
-                    JOptionPane.showMessageDialog(frame, "新增磁盘数据(" + disk.getId() + ")错误，详情请看日志", "错误", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(frame, "新增磁盘数据(" + disk.getId() + ")错误，详情请查看日志", "错误", JOptionPane.ERROR_MESSAGE);
                     return;
                 }finally {
                     setWaiting(false);
@@ -700,7 +720,7 @@ public class StartUp {
     }
     
     private void resetPage() {
-        int total = 1 + (int)(pager.getTotal() / pager.getSize());
+        int total = pager.getMaxPage();
         
         pageNumLb.setText("" + pager.getPage());
         totalPageLb.setText("" + total);
@@ -895,13 +915,15 @@ public class StartUp {
 
         settingBtn = new JButton("设置");
         backupBtn = new JButton("备份");
-        
-        panel08.add(new JLabel(""));
+        syncBtn = new JButton("同步");
+
         panel08.add(settingBtn);
-        panel08.add(new JLabel(""));
-        panel08.add(new JLabel(""));
         panel08.add(backupBtn);
+        panel08.add(syncBtn);
         panel08.add(new JLabel(""));
+        panel08.add(new JLabel(""));
+        panel08.add(new JLabel(""));
+
         
         settingBtn.setEnabled(false);//TODO 设定暂未实现
         
