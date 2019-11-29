@@ -76,6 +76,14 @@ public class SyncDBFileDialog extends JDialog {
             public void windowClosed(WindowEvent e) {
                 if(service != null) {
                     service.finish();
+                    service = null;
+                }
+            }
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if(service != null) {
+                    service.finish();
+                    service = null;
                 }
             }
         });
@@ -97,7 +105,7 @@ public class SyncDBFileDialog extends JDialog {
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
         Map hints = new HashMap();
         hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
-        hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);//纠错等级，从低到高为LMQH
+        hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);//纠错等级，从低到高为LMQH
         //hints.put(EncodeHintType.MARGIN, 2);//边距
         
         try {

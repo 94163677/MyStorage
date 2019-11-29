@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -14,12 +16,11 @@ public class SyncService{
     private static final Logger logger = Logger.getLogger(SyncService.class);
     
     private ServerSocket service;
-    private LocalFileSendSyncProcess sendProcess;
     private boolean isFinish = false;
+    private List<LocalFileSendSyncProcess> processList = new ArrayList<>();
 
     public void start(ConnectParam param, File file){
         try {
-            sendProcess = new LocalFileSendSyncProcess(param, file);
             service = new ServerSocket(param.getPort());
             logger.info("Service Started");
             
@@ -29,6 +30,8 @@ public class SyncService{
                     continue;
                 }
                 logger.info("Connect with: " + socket.getInetAddress().getHostAddress());
+                LocalFileSendSyncProcess sendProcess = new LocalFileSendSyncProcess(param, file);
+                processList.add(sendProcess);
                 
                 Thread thread = new Thread() {
                     @Override
@@ -49,13 +52,6 @@ public class SyncService{
         }finally {
             logger.info("Service finish");
             if(!isFinish) {
-                if(sendProcess != null) {
-                    try {
-                        sendProcess.finish();
-                    } catch (Exception e) {
-                        logger.error("finish error", e);
-                    }
-                }
                 finish();
             }
         }
@@ -63,6 +59,16 @@ public class SyncService{
     
     public void finish() {
         isFinish = true;
+        for(LocalFileSendSyncProcess process : processList) {
+            if(process == null || process.isFinish()) {
+                continue;
+            }
+            try {
+                process.finish();
+            } catch (Exception e) {
+                logger.error("finish error", e);
+            }
+        }
         if(service != null) {
             try {
                 service.close();

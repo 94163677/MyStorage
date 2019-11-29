@@ -18,7 +18,6 @@ import air.kanna.mystorage.util.NumberUtil;
 
 public class LocalFileSendSyncProcess extends BaseSyncProcess{
     private static final Logger logger = Logger.getLogger(LocalFileSendSyncProcess.class);
-    private static final int DEFAULT_BLOCK_SIZE = 50 * 1024;//默认块大小：50KB
     
     private File baseFile;
     
@@ -37,7 +36,6 @@ public class LocalFileSendSyncProcess extends BaseSyncProcess{
         }
     }
 
-    
 
     @Override
     protected void doStart(OperMessage msg) throws Exception {
@@ -49,6 +47,7 @@ public class LocalFileSendSyncProcess extends BaseSyncProcess{
         byte[] buffer = new byte[DEFAULT_BLOCK_SIZE];
         int fileId = (int)(Math.random() * Integer.MAX_VALUE);
         int readed = -1, count = 1;
+        //int maxBlock = 1 + (int)(baseFile.length() / DEFAULT_BLOCK_SIZE);
         
         info.setFileId(fileId);
         info.setFileSize(baseFile.length());
@@ -73,7 +72,6 @@ public class LocalFileSendSyncProcess extends BaseSyncProcess{
             digest.update(buffer, 0, readed);
             
             message.setMessage(FileData.class.getName() + JSON.toJSONString(data));
-            
             sendMessage(message);
         }
         ins.close();

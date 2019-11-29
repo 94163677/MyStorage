@@ -255,8 +255,7 @@ public class StartUp {
         
         nextBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                int total = 1 + (int)(pager.getTotal() / pager.getSize());
-                if(pager.getPage() >= total) {
+                if(pager.getPage() >= pager.getMaxPage()) {
                     JOptionPane.showMessageDialog(frame, "已经是最后一页", "提示", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
@@ -721,7 +720,7 @@ public class StartUp {
     }
     
     private void resetPage() {
-        int total = 1 + (int)(pager.getTotal() / pager.getSize());
+        int total = pager.getMaxPage();
         
         pageNumLb.setText("" + pager.getPage());
         totalPageLb.setText("" + total);

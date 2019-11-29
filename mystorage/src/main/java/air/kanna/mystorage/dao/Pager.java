@@ -46,4 +46,11 @@ public class Pager {
     public void setTotal(int total) {
         this.total = total;
     }
+    
+    public int getMaxPage(){
+        if(total <= 0 || size <= 0){
+            return 1;
+        }
+        return ((int)(total / size) + 1);
+    }
 }
