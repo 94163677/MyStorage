@@ -105,12 +105,17 @@ public abstract class BaseSyncProcess {
         StringBuilder sb = new StringBuilder();
         int ch = -1;
         
-        for(ch=ins.read(); ((!isBreak) && ch>=0); ch=ins.read()) {
+        for(ch=ins.read(); ch>=0; ) {
             if(ch == 0) {
                 dealMessage(getMessage(sb.toString()));
                 sb = new StringBuilder();
             }else {
                 sb.append((char)ch);
+            }
+            if(!isBreak){
+                ch = ins.read();
+            }else{
+                break;
             }
         }
         if(sb.length() > 0) {
