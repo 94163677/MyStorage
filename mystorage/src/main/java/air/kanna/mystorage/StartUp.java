@@ -58,8 +58,9 @@ import air.kanna.mystorage.dao.FileItemDAO;
 import air.kanna.mystorage.dao.OrderBy;
 import air.kanna.mystorage.dao.Pager;
 import air.kanna.mystorage.dao.condition.FileItemCondition;
+import air.kanna.mystorage.dao.condition.FileItemConditionExt;
 import air.kanna.mystorage.dao.impl.sqlite.DiskDescriptionDAOSqliteImpl;
-import air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl;
+import air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteExtImpl;
 import air.kanna.mystorage.dao.impl.sqlite.init.SqliteInitialize;
 import air.kanna.mystorage.model.DiskDescription;
 import air.kanna.mystorage.model.FileHash;
@@ -89,6 +90,8 @@ public class StartUp {
     private JLabel totalItemLb;
     private JProgressBar executeProcess;
     private JTextField fileNameTf;
+    private JTextField fileNameOrTf;
+    private JTextField fileNameNotTf;
     private JComboBox<String> fileTypeCb;
     private JComboBox<String> diskCb;
     private JCheckBox scanWithHashCb;
@@ -176,6 +179,8 @@ public class StartUp {
         resetBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 fileNameTf.setText("");
+                fileNameOrTf.setText("");
+                fileNameNotTf.setText("");
                 fileTypeCb.setSelectedIndex(0);
                 diskCb.setSelectedIndex(0);
             }
@@ -605,7 +610,7 @@ public class StartUp {
             Connection conn = dbInit.initAndGetConnection(dbFile);
             
             DiskDescriptionDAO diskDao = new DiskDescriptionDAOSqliteImpl(conn);
-            FileItemDAO itemDao = new FileItemDAOSqliteImpl(conn);
+            FileItemDAO itemDao = new FileItemDAOSqliteExtImpl(conn);
             
             itemService = new FileItemServiceImpl();
             diskService = new DiskDescriptionServiceImpl();
@@ -686,12 +691,37 @@ public class StartUp {
         return null;
     }
     
+    private List<String> getUnSpaceKeys(String key){
+        if(StringUtil.isSpace(key)) {
+            return new ArrayList<>(1);
+        }
+        String[] keys = key.split(" ");
+        if(keys == null || keys.length <= 0) {
+            keys = new String[] {key};
+        }
+        List<String> list = new ArrayList<>(keys.length);
+        for(int i=0; i<keys.length; i++) {
+            if(StringUtil.isSpace(keys[i])) {
+                continue;
+            }
+            list.add(keys[i]);
+        }
+        return list;
+    }
+    
     private void doSearch() {
-        FileItemCondition condition = new FileItemCondition();
+        FileItemConditionExt condition = new FileItemConditionExt();
         
         if(StringUtil.isNotSpace(fileNameTf.getText())) {
-            condition.setFileName(fileNameTf.getText());
+            condition.setFileNameIncludeAll(getUnSpaceKeys(fileNameTf.getText()));
         }
+        if(StringUtil.isNotSpace(fileNameOrTf.getText())) {
+            condition.setFileNameIncludeOne(getUnSpaceKeys(fileNameOrTf.getText()));
+        }
+        if(StringUtil.isNotSpace(fileNameNotTf.getText())) {
+            condition.setFileNameExclude(getUnSpaceKeys(fileNameNotTf.getText()));
+        }
+        
         if(fileTypeCb.getSelectedIndex() > 0) {
             if(fileTypeCb.getSelectedIndex() == 1) {
                 condition.setFileType(FileType.TYPE_FILE.getType());
@@ -816,6 +846,9 @@ public class StartUp {
     
     private void setFromConfig() {
         fileNameTf.setText(config.getSearchFileName());
+        fileNameOrTf.setText(config.getSearchFileNameOr());
+        fileNameNotTf.setText(config.getSearchFileNameNot());
+        
         if(!Nullable.isNull(config.getSearchFileType())) {
             if("D".equalsIgnoreCase(config.getSearchFileType())) {
                 fileTypeCb.setSelectedIndex(1);
@@ -847,6 +880,9 @@ public class StartUp {
     
     private void saveToConfig() {
         config.setSearchFileName(fileNameTf.getText());
+        config.setSearchFileNameOr(fileNameOrTf.getText());
+        config.setSearchFileNameNot(fileNameNotTf.getText());
+        
         switch(fileTypeCb.getSelectedIndex()) {
             case 1 : config.setSearchFileType("D");break;
             case 2 : config.setSearchFileType("F");break;
@@ -906,12 +942,12 @@ public class StartUp {
         
         JPanel paramPanel = new JPanel();
         frame.getContentPane().add(paramPanel, BorderLayout.WEST);
-        paramPanel.setLayout(new GridLayout(9, 1, 0, 0));
+        paramPanel.setLayout(new GridLayout(18, 1, 0, 0));
         
         
         JPanel panel08 = new JPanel();
         paramPanel.add(panel08);
-        panel08.setLayout(new GridLayout(2, 3, 0, 0));
+        panel08.setLayout(new GridLayout(1, 3, 0, 0));
 
         settingBtn = new JButton("设置");
         backupBtn = new JButton("备份");
@@ -920,40 +956,75 @@ public class StartUp {
         panel08.add(settingBtn);
         panel08.add(backupBtn);
         panel08.add(syncBtn);
-        panel08.add(new JLabel(""));
-        panel08.add(new JLabel(""));
-        panel08.add(new JLabel(""));
 
         
         settingBtn.setEnabled(false);//TODO 设定暂未实现
         
         JPanel panel01 = new JPanel();
         paramPanel.add(panel01);
-        panel01.setLayout(new GridLayout(2, 1, 0, 0));
-        JLabel label = new JLabel("文件名称：");
+        panel01.setLayout(new GridLayout(1, 1, 0, 0));
+        JLabel label = new JLabel("文件名称（包含全部）：");
         panel01.add(label);
+        
+        JPanel panel12 = new JPanel();
+        paramPanel.add(panel12);
+        panel12.setLayout(new GridLayout(1, 1, 0, 0));
         fileNameTf = new JTextField();
-        panel01.add(fileNameTf);
+        panel12.add(fileNameTf);
         fileNameTf.setColumns(15);
+        
+        JPanel panel13 = new JPanel();
+        paramPanel.add(panel13);
+        panel13.setLayout(new GridLayout(1, 1, 0, 0));
+        JLabel label01 = new JLabel("文件名称（包含某个）：");
+        panel13.add(label01);
+        
+        JPanel panel14 = new JPanel();
+        paramPanel.add(panel14);
+        panel14.setLayout(new GridLayout(1, 1, 0, 0));
+        fileNameOrTf = new JTextField();
+        panel14.add(fileNameOrTf);
+        fileNameOrTf.setColumns(15);
+        
+        JPanel panel15 = new JPanel();
+        paramPanel.add(panel15);
+        panel15.setLayout(new GridLayout(1, 1, 0, 0));
+        JLabel label02 = new JLabel("文件名称（不包含）：");
+        panel15.add(label02);
+        
+        JPanel panel16 = new JPanel();
+        paramPanel.add(panel16);
+        panel16.setLayout(new GridLayout(1, 1, 0, 0));
+        fileNameNotTf = new JTextField();
+        panel16.add(fileNameNotTf);
+        fileNameNotTf.setColumns(15);
         
         
         JPanel panel02 = new JPanel();
         paramPanel.add(panel02);
-        panel02.setLayout(new GridLayout(2, 1, 0, 0));
+        panel02.setLayout(new GridLayout(1, 1, 0, 0));
         JLabel label_1 = new JLabel("文件类型：");
         panel02.add(label_1);
+        
+        JPanel panel17 = new JPanel();
+        paramPanel.add(panel17);
+        panel17.setLayout(new GridLayout(1, 1, 0, 0));
         fileTypeCb = new JComboBox<String>();
         fileTypeCb.setModel(new DefaultComboBoxModel<String>(new String[] {"全部", "文件", "目录"}));
-        panel02.add(fileTypeCb);
+        panel17.add(fileTypeCb);
         
         
         JPanel panel03 = new JPanel();
         paramPanel.add(panel03);
-        panel03.setLayout(new GridLayout(2, 1, 0, 0));
+        panel03.setLayout(new GridLayout(1, 1, 0, 0));
         JLabel label_2 = new JLabel("所属磁盘：");
         panel03.add(label_2);
+        
+        JPanel panel18 = new JPanel();
+        paramPanel.add(panel18);
+        panel18.setLayout(new GridLayout(1, 1, 0, 0));
         diskCb = new JComboBox<String>();
-        panel03.add(diskCb);
+        panel18.add(diskCb);
         
         
         JPanel panel04 = new JPanel();
@@ -971,10 +1042,11 @@ public class StartUp {
         JPanel panel05 = new JPanel();
         paramPanel.add(panel05);
         panel05.setLayout(new GridLayout(2, 2, 0, 0));
-        
         scanWithHashCb = new JCheckBox("扫描磁盘同时计算Hash");
         panel05.add(scanWithHashCb);
         
+        JPanel panel20 = new JPanel();
+        paramPanel.add(panel20);
         
         JPanel panel06 = new JPanel();
         paramPanel.add(panel06);
@@ -987,7 +1059,7 @@ public class StartUp {
         
         JPanel panel07 = new JPanel();
         paramPanel.add(panel07);
-        panel07.setLayout(new GridLayout(2, 1, 0, 0));
+        panel07.setLayout(new GridLayout(1, 1, 0, 0));
         
         JPanel panel10 = new JPanel();
         panel07.add(panel10);
@@ -1013,15 +1085,16 @@ public class StartUp {
         totalItemLb = new JLabel("-");
         panel10.add(totalItemLb);
         
+        JPanel panel19 = new JPanel();
+        paramPanel.add(panel19);
         JPanel panel11 = new JPanel();
-        panel07.add(panel11);
+        panel19.add(panel11);
         
         pagerSlider = new JSlider();
         pagerSlider.setMinimum(1);
         pagerSlider.setMaximum(1);
         pagerSlider.setValue(1);
         panel11.add(pagerSlider);
-        
         
         JPanel panel09 = new JPanel();
         paramPanel.add(panel09);

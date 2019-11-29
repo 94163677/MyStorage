@@ -25,8 +25,12 @@ public class MyStorageConfig {
     /**
      * 用户输入相关的保存性设置
      */
-    //搜索文件名称
+    //默认搜索文件名称
     private String searchFileName = "";
+  //搜索文件名称Or条件
+    private String searchFileNameOr = "";
+  //搜索文件名称Not条件
+    private String searchFileNameNot = "";
     //搜索文件类型
     private String searchFileType = "";
     //搜索指定的磁盘
@@ -83,6 +87,18 @@ public class MyStorageConfig {
     }
     public void setSearchFileName(String searchFileName) {
         this.searchFileName = searchFileName;
+    }
+    public String getSearchFileNameOr() {
+        return searchFileNameOr;
+    }
+    public String getSearchFileNameNot() {
+        return searchFileNameNot;
+    }
+    public void setSearchFileNameOr(String searchFileNameOr) {
+        this.searchFileNameOr = searchFileNameOr;
+    }
+    public void setSearchFileNameNot(String searchFileNameNot) {
+        this.searchFileNameNot = searchFileNameNot;
     }
     public String getSearchFileType() {
         return searchFileType;

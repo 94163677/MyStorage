@@ -228,15 +228,9 @@ public class FileItemDAOSqliteImpl
         return "id";
     }
     
-    private String getConditionSQL(FileItemCondition condition) {
+    protected String getNormalConditionSQL(FileItemCondition condition) {
         StringBuilder sb = new StringBuilder();
         
-        if(condition.getDiskId() != null && condition.getDiskId() > 0) {
-            sb.append(" AND disk_id = ").append(condition.getDiskId());
-        }
-        if(StringUtil.isNotNull(condition.getFileName())) {
-            sb.append(" AND file_name LIKE \'%").append(condition.getFileName()).append("%\'");
-        }
         if(condition.getFileType() >= '0') {
             sb.append(" AND file_type = ").append((int)condition.getFileType());
         }
@@ -264,6 +258,20 @@ public class FileItemDAOSqliteImpl
             sb.append(" AND update_date <= ").append(condition.getLastModMax().longValue());
         }
         
+        return sb.toString();
+    }
+    
+    protected String getConditionSQL(FileItemCondition condition) {
+        StringBuilder sb = new StringBuilder();
+        
+        if(condition.getDiskId() != null && condition.getDiskId() > 0) {
+            sb.append(" AND disk_id = ").append(condition.getDiskId());
+        }
+        if(StringUtil.isNotNull(condition.getFileName())) {
+            sb.append(" AND file_name LIKE \'%").append(condition.getFileName()).append("%\'");
+        }
+        sb.append(getNormalConditionSQL(condition));
+
         return sb.toString();
     }
 }

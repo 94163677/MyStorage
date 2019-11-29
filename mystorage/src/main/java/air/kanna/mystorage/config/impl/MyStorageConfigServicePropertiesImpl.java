@@ -47,6 +47,16 @@ public class MyStorageConfigServicePropertiesImpl
             config.setSearchFileName(temp);
         }
         
+        temp = prop.getProperty("searchFileNameOr");
+        if(!Nullable.isNull(temp)) {
+            config.setSearchFileNameOr(temp);
+        }
+        
+        temp = prop.getProperty("searchFileNameNot");
+        if(!Nullable.isNull(temp)) {
+            config.setSearchFileNameNot(temp);
+        }
+        
         temp = prop.getProperty("searchFileType");
         if(!Nullable.isNull(temp)) {
             config.setSearchFileType(temp);
@@ -148,6 +158,8 @@ public class MyStorageConfigServicePropertiesImpl
         prop.put("dbFileName", "" + config.getDbFileName());
         
         prop.put("searchFileName", config.getSearchFileName());
+        prop.put("searchFileNameOr", config.getSearchFileNameOr());
+        prop.put("searchFileNameNot", config.getSearchFileNameNot());
         prop.put("searchFileType", config.getSearchFileType());
         prop.put("searchDiskPath", config.getSearchDiskPath());
         prop.put("isScanWithHash", config.getIsScanWithHash());
