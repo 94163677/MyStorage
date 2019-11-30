@@ -435,6 +435,7 @@ public class StartUp {
                 }catch(Exception e) {
                     logger.error("Scan Disk Error", e);
                     JOptionPane.showMessageDialog(frame, "扫描磁盘(" + disk.getBasePath() + ")错误，详情请查看日志", "错误", JOptionPane.ERROR_MESSAGE);
+                    setWaiting(false);
                     return;
                 }
                 try {
@@ -443,6 +444,7 @@ public class StartUp {
                 }catch(Exception e) {
                     logger.error("Delete FileItem by Disk Error", e);
                     JOptionPane.showMessageDialog(frame, "删除原来磁盘数据(" + disk.getId() + ")错误，详情请查看日志", "错误", JOptionPane.ERROR_MESSAGE);
+                    setWaiting(false);
                     return;
                 }
                 
