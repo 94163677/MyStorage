@@ -3,6 +3,10 @@ package air.kanna.mystorage;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -45,11 +49,15 @@ import javax.swing.table.TableColumnModel;
 
 import org.apache.log4j.Logger;
 
+import air.kanna.kindlesync.compare.ListComparer;
+import air.kanna.kindlesync.compare.OperationItem;
 import air.kanna.kindlesync.scan.FileScanner;
 import air.kanna.kindlesync.scan.PathScanner;
+import air.kanna.kindlesync.util.CollectionUtil;
 import air.kanna.kindlesync.util.Nullable;
 import air.kanna.mystorage.backup.BackupService;
 import air.kanna.mystorage.backup.impl.LocalBackupServiceImpl;
+import air.kanna.mystorage.compare.FileItemListComparer;
 import air.kanna.mystorage.config.MyStorageConfig;
 import air.kanna.mystorage.config.MyStorageConfigService;
 import air.kanna.mystorage.config.impl.MyStorageConfigServicePropertiesImpl;
@@ -58,8 +66,9 @@ import air.kanna.mystorage.dao.FileItemDAO;
 import air.kanna.mystorage.dao.OrderBy;
 import air.kanna.mystorage.dao.Pager;
 import air.kanna.mystorage.dao.condition.FileItemCondition;
+import air.kanna.mystorage.dao.condition.FileItemConditionExt;
 import air.kanna.mystorage.dao.impl.sqlite.DiskDescriptionDAOSqliteImpl;
-import air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteImpl;
+import air.kanna.mystorage.dao.impl.sqlite.FileItemDAOSqliteExtImpl;
 import air.kanna.mystorage.dao.impl.sqlite.init.SqliteInitialize;
 import air.kanna.mystorage.model.DiskDescription;
 import air.kanna.mystorage.model.FileHash;
@@ -78,7 +87,7 @@ import air.kanna.mystorage.util.StringUtil;
 
 public class StartUp {
     private static final Logger logger = Logger.getLogger(StartUp.class);
-    private static final String TITLE = "磁盘离线搜索工具";
+    private static final String TITLE = "我的硬盘离线搜索工具";
     private static final String CONFIG_FILE = "config.cfg";
     
     private JFrame frame;
@@ -89,6 +98,8 @@ public class StartUp {
     private JLabel totalItemLb;
     private JProgressBar executeProcess;
     private JTextField fileNameTf;
+    private JTextField fileNameOrTf;
+    private JTextField fileNameNotTf;
     private JComboBox<String> fileTypeCb;
     private JComboBox<String> diskCb;
     private JCheckBox scanWithHashCb;
@@ -115,6 +126,7 @@ public class StartUp {
     private SourceFileItemGetter getter;
     private HashService hashService;
     private BackupService backupService;
+    private ListComparer<FileItem> comparer;
     
     private OrderBy order;
     private Pager pager;
@@ -126,7 +138,11 @@ public class StartUp {
     private File dbFile;
     private File backupPath;
     
-    
+    public static void setSysClipboardText(String writeMe) {
+        Clipboard clip = Toolkit.getDefaultToolkit().getSystemClipboard();
+        Transferable tText = new StringSelection(writeMe);
+        clip.setContents(tText, null);
+    }
 
     /**
      * Create the application.
@@ -176,6 +192,8 @@ public class StartUp {
         resetBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 fileNameTf.setText("");
+                fileNameOrTf.setText("");
+                fileNameNotTf.setText("");
                 fileTypeCb.setSelectedIndex(0);
                 diskCb.setSelectedIndex(0);
             }
@@ -205,7 +223,7 @@ public class StartUp {
                     return;
                 }
                 reFlushDiskList();
-                reScanDisk(disk);
+                incrementScanDisk(disk);
                 
             }
         });
@@ -217,7 +235,7 @@ public class StartUp {
                     JOptionPane.showMessageDialog(frame, "请选择需要重新扫描的磁盘", "提示", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
-                reScanDisk(diskList.get(index - 1));
+                incrementScanDisk(diskList.get(index - 1));
             }
         });
         
@@ -400,6 +418,129 @@ public class StartUp {
                 "信息", JOptionPane.INFORMATION_MESSAGE);
     }
     
+    private void incrementScanDisk(DiskDescription disk) {
+        if(disk == null) {
+            return;
+        }
+        int idx = getDiskIndex(disk);
+        if(idx < 0) {
+            JOptionPane.showMessageDialog(frame, "请选择要增量扫描的磁盘", "错误", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        setWaiting(true);
+        
+        new Thread() {
+            @Override
+            public void run() {
+                FileItemCondition condition = new FileItemCondition();
+                List<FileItem> scanItems = null, dbItems = null;
+                int insCount = 0, delCount = 0;
+                boolean isHash = scanWithHashCb.isSelected();
+
+                DiskDescription disk = diskList.get(idx);
+                condition.setDiskId(disk.getId());
+                processListener.setMax(1000);
+                
+                //扫描当前选择目录，获取最新文件列表
+                try {
+                    processListener.setPosition(100, "开始扫描目录：" + disk.getBasePath());
+                    scanItems = getter.createNewDiskFileItem(disk);
+                }catch(Exception e) {
+                    logger.error("Scan Disk Error", e);
+                    JOptionPane.showMessageDialog(frame, "扫描磁盘(" + disk.getBasePath() + ")错误，详情请查看日志", "错误", JOptionPane.ERROR_MESSAGE);
+                    setWaiting(false);
+                    return;
+                }
+                //获取数据库中的文件列表
+                try {
+                    processListener.setPosition(200, "获取原目录数据");
+                    dbItems = itemService.getByCondition(condition, null, null);
+                }catch(Exception e) {
+                    logger.error("Delete FileItem by Disk Error", e);
+                    JOptionPane.showMessageDialog(frame, "删除原来磁盘数据(" + disk.getId() + ")错误，详情请查看日志", "错误", JOptionPane.ERROR_MESSAGE);
+                    setWaiting(false);
+                    return;
+                }
+                List<OperationItem<FileItem>> compList = comparer.getCompareResult(scanItems, dbItems);
+                long current = 200, processedLen = 0, totalLen = 0;
+                long beginTime = System.currentTimeMillis();
+                long prevTime = beginTime, currTime = 0, leftSecond = 0;
+                
+                if(isHash) {
+                    for(OperationItem<FileItem> operItem : compList) {
+                        if(operItem.getItem() != null) {
+                            totalLen += operItem.getItem().getFileSize();
+                        }
+                    }
+                }else {
+                    totalLen = compList.size();
+                }
+                
+                List<OperationItem<FileItem>> errorList = new ArrayList<>();
+                
+                for(OperationItem<FileItem> operItem : compList) {
+                    processListener.setPosition((int)current, 
+                            "处理中，预计剩下 " + getShowTimeBySecond(leftSecond)  + "：" + operItem.getItem().getFileName());
+                    try {
+                        switch(operItem.getOperation()) {
+                            case REP: {
+                                if(itemService.deleteById(operItem.getOrgItem().getId()) <= 0) {
+                                    errorList.add(operItem);
+                                    logger.error("REP error: " + operItem.getOrgItem().getFileName());
+                                }
+                            };
+                            case ADD: {
+                                if(isHash) {
+                                    fillFileItemHash(operItem.getItem());
+                                }
+                                if(itemService.add(operItem.getItem()) <= 0) {
+                                    errorList.add(operItem);
+                                    logger.error("ADD error: " + operItem.getItem().getFileName());
+                                }
+                            };break;
+                            case DEL: {
+                                if(itemService.deleteById(operItem.getItem().getId()) <= 0) {
+                                    errorList.add(operItem);
+                                    logger.error("DEL error: " + operItem.getItem().getFileName());
+                                }
+                            };break;
+                        }
+                    }catch(Exception e) {
+                        logger.error("process FileItem Error: " + operItem.getItem().getFileName(), e);
+                        errorList.add(operItem);
+                    }
+                    if(isHash) {
+                        processedLen += operItem.getItem().getFileSize();
+                    }else {
+                        processedLen++;
+                    }
+                    
+                    current = (long)((800 * processedLen) / totalLen) + 200;
+                    currTime = System.currentTimeMillis();
+                    leftSecond = (long)(((currTime - prevTime) * (totalLen - processedLen)) / (processedLen * 1000));
+                }
+                setErrorFileItemToClipboard(errorList);
+                processListener.finish("处理完成");
+                setWaiting(false);
+            }
+        }.start();
+    }
+    
+    private void setErrorFileItemToClipboard(List<OperationItem<FileItem>> errorList) {
+        if(CollectionUtil.isEmpty(errorList)) {
+            return;
+        }
+        StringBuilder sb = new StringBuilder();
+        for(OperationItem<FileItem> operItem : errorList) {
+            sb.append(operItem.getOperation().getOperationCode());
+            sb.append(" : ").append(operItem.getItem().getFileName());
+            sb.append('\n');
+        }
+        setSysClipboardText(sb.toString());
+        JOptionPane.showMessageDialog(frame, "更新部分成功，详情请查看日志，已将失败记录复制到剪切板", "更新部分错误", JOptionPane.WARNING_MESSAGE);
+    }
+    
     private void reScanDisk(DiskDescription disk) {
         if(disk == null) {
             return;
@@ -430,6 +571,7 @@ public class StartUp {
                 }catch(Exception e) {
                     logger.error("Scan Disk Error", e);
                     JOptionPane.showMessageDialog(frame, "扫描磁盘(" + disk.getBasePath() + ")错误，详情请查看日志", "错误", JOptionPane.ERROR_MESSAGE);
+                    setWaiting(false);
                     return;
                 }
                 try {
@@ -438,9 +580,10 @@ public class StartUp {
                 }catch(Exception e) {
                     logger.error("Delete FileItem by Disk Error", e);
                     JOptionPane.showMessageDialog(frame, "删除原来磁盘数据(" + disk.getId() + ")错误，详情请查看日志", "错误", JOptionPane.ERROR_MESSAGE);
+                    setWaiting(false);
                     return;
                 }
-                
+                //TODO 如果要md5或者sha256的话，要改为按大小计算时间
                 long time1 = System.currentTimeMillis(), time2 = 0L, time3 = 0L, leftSecond = 0L;
                 try {
                     if(items != null && items.size() > 0) {
@@ -476,31 +619,31 @@ public class StartUp {
                         "重新扫描磁盘(" + disk.getBasePath() + ")成功，删除原来" + delCount + "条数据，新增" + insCount + "条数据。",
                         "信息", JOptionPane.INFORMATION_MESSAGE);
             }
-            
-            private void fillFileItemHash(FileItem item) {
-                try {
-                    setFileItemHash(
-                            hashService.getFileItemHashString(item), item);
-                }catch(Exception e) {
-                    logger.warn("Fill hash error.", e);
-                }
-            }
-            
-            private void setFileItemHash(Map<String, String> hash, FileItem item) {
-                if(hash == null || item == null || hash.size() <= 0) {
-                    return;
-                }
-                String hashStr = hash.get(FileHash.MD5.getValue());
-                if(StringUtil.isNotSpace(hashStr)) {
-                    item.setFileHash01(hashStr);
-                }
-                
-                hashStr = hash.get(FileHash.SHA256.getValue());
-                if(StringUtil.isNotSpace(hashStr)) {
-                    item.setFileHash02(hashStr);
-                }
-            }
         }.start();
+    }
+    
+    private void fillFileItemHash(FileItem item) {
+        try {
+            setFileItemHash(
+                    hashService.getFileItemHashString(item), item);
+        }catch(Exception e) {
+            logger.warn("Fill hash error.", e);
+        }
+    }
+    
+    private void setFileItemHash(Map<String, String> hash, FileItem item) {
+        if(hash == null || item == null || hash.size() <= 0) {
+            return;
+        }
+        String hashStr = hash.get(FileHash.MD5.getValue());
+        if(StringUtil.isNotSpace(hashStr)) {
+            item.setFileHash01(hashStr);
+        }
+        
+        hashStr = hash.get(FileHash.SHA256.getValue());
+        if(StringUtil.isNotSpace(hashStr)) {
+            item.setFileHash02(hashStr);
+        }
     }
     
     private String getShowTimeBySecond(long second) {
@@ -537,6 +680,7 @@ public class StartUp {
         pager = new Pager();
         hashService = new LocalMsgDigestHashServiceImpl();
         backupService = new LocalBackupServiceImpl();
+        comparer = new FileItemListComparer();
         
         try {
             for(int i=0; i<FileHash.values().length; i++) {
@@ -605,7 +749,7 @@ public class StartUp {
             Connection conn = dbInit.initAndGetConnection(dbFile);
             
             DiskDescriptionDAO diskDao = new DiskDescriptionDAOSqliteImpl(conn);
-            FileItemDAO itemDao = new FileItemDAOSqliteImpl(conn);
+            FileItemDAO itemDao = new FileItemDAOSqliteExtImpl(conn);
             
             itemService = new FileItemServiceImpl();
             diskService = new DiskDescriptionServiceImpl();
@@ -686,12 +830,37 @@ public class StartUp {
         return null;
     }
     
+    private List<String> getUnSpaceKeys(String key){
+        if(StringUtil.isSpace(key)) {
+            return new ArrayList<>(1);
+        }
+        String[] keys = key.split(" ");
+        if(keys == null || keys.length <= 0) {
+            keys = new String[] {key};
+        }
+        List<String> list = new ArrayList<>(keys.length);
+        for(int i=0; i<keys.length; i++) {
+            if(StringUtil.isSpace(keys[i])) {
+                continue;
+            }
+            list.add(keys[i]);
+        }
+        return list;
+    }
+    
     private void doSearch() {
-        FileItemCondition condition = new FileItemCondition();
+        FileItemConditionExt condition = new FileItemConditionExt();
         
         if(StringUtil.isNotSpace(fileNameTf.getText())) {
-            condition.setFileName(fileNameTf.getText());
+            condition.setFileNameIncludeAll(getUnSpaceKeys(fileNameTf.getText()));
         }
+        if(StringUtil.isNotSpace(fileNameOrTf.getText())) {
+            condition.setFileNameIncludeOne(getUnSpaceKeys(fileNameOrTf.getText()));
+        }
+        if(StringUtil.isNotSpace(fileNameNotTf.getText())) {
+            condition.setFileNameExclude(getUnSpaceKeys(fileNameNotTf.getText()));
+        }
+        
         if(fileTypeCb.getSelectedIndex() > 0) {
             if(fileTypeCb.getSelectedIndex() == 1) {
                 condition.setFileType(FileType.TYPE_FILE.getType());
@@ -816,6 +985,9 @@ public class StartUp {
     
     private void setFromConfig() {
         fileNameTf.setText(config.getSearchFileName());
+        fileNameOrTf.setText(config.getSearchFileNameOr());
+        fileNameNotTf.setText(config.getSearchFileNameNot());
+        
         if(!Nullable.isNull(config.getSearchFileType())) {
             if("D".equalsIgnoreCase(config.getSearchFileType())) {
                 fileTypeCb.setSelectedIndex(1);
@@ -847,6 +1019,9 @@ public class StartUp {
     
     private void saveToConfig() {
         config.setSearchFileName(fileNameTf.getText());
+        config.setSearchFileNameOr(fileNameOrTf.getText());
+        config.setSearchFileNameNot(fileNameNotTf.getText());
+        
         switch(fileTypeCb.getSelectedIndex()) {
             case 1 : config.setSearchFileType("D");break;
             case 2 : config.setSearchFileType("F");break;
@@ -906,12 +1081,12 @@ public class StartUp {
         
         JPanel paramPanel = new JPanel();
         frame.getContentPane().add(paramPanel, BorderLayout.WEST);
-        paramPanel.setLayout(new GridLayout(9, 1, 0, 0));
+        paramPanel.setLayout(new GridLayout(18, 1, 0, 0));
         
         
         JPanel panel08 = new JPanel();
         paramPanel.add(panel08);
-        panel08.setLayout(new GridLayout(2, 3, 0, 0));
+        panel08.setLayout(new GridLayout(1, 3, 0, 0));
 
         settingBtn = new JButton("设置");
         backupBtn = new JButton("备份");
@@ -920,40 +1095,75 @@ public class StartUp {
         panel08.add(settingBtn);
         panel08.add(backupBtn);
         panel08.add(syncBtn);
-        panel08.add(new JLabel(""));
-        panel08.add(new JLabel(""));
-        panel08.add(new JLabel(""));
 
         
         settingBtn.setEnabled(false);//TODO 设定暂未实现
         
         JPanel panel01 = new JPanel();
         paramPanel.add(panel01);
-        panel01.setLayout(new GridLayout(2, 1, 0, 0));
-        JLabel label = new JLabel("文件名称：");
+        panel01.setLayout(new GridLayout(1, 1, 0, 0));
+        JLabel label = new JLabel("文件名称（包含全部）：");
         panel01.add(label);
+        
+        JPanel panel12 = new JPanel();
+        paramPanel.add(panel12);
+        panel12.setLayout(new GridLayout(1, 1, 0, 0));
         fileNameTf = new JTextField();
-        panel01.add(fileNameTf);
+        panel12.add(fileNameTf);
         fileNameTf.setColumns(15);
+        
+        JPanel panel13 = new JPanel();
+        paramPanel.add(panel13);
+        panel13.setLayout(new GridLayout(1, 1, 0, 0));
+        JLabel label01 = new JLabel("文件名称（包含某个）：");
+        panel13.add(label01);
+        
+        JPanel panel14 = new JPanel();
+        paramPanel.add(panel14);
+        panel14.setLayout(new GridLayout(1, 1, 0, 0));
+        fileNameOrTf = new JTextField();
+        panel14.add(fileNameOrTf);
+        fileNameOrTf.setColumns(15);
+        
+        JPanel panel15 = new JPanel();
+        paramPanel.add(panel15);
+        panel15.setLayout(new GridLayout(1, 1, 0, 0));
+        JLabel label02 = new JLabel("文件名称（不包含）：");
+        panel15.add(label02);
+        
+        JPanel panel16 = new JPanel();
+        paramPanel.add(panel16);
+        panel16.setLayout(new GridLayout(1, 1, 0, 0));
+        fileNameNotTf = new JTextField();
+        panel16.add(fileNameNotTf);
+        fileNameNotTf.setColumns(15);
         
         
         JPanel panel02 = new JPanel();
         paramPanel.add(panel02);
-        panel02.setLayout(new GridLayout(2, 1, 0, 0));
+        panel02.setLayout(new GridLayout(1, 1, 0, 0));
         JLabel label_1 = new JLabel("文件类型：");
         panel02.add(label_1);
+        
+        JPanel panel17 = new JPanel();
+        paramPanel.add(panel17);
+        panel17.setLayout(new GridLayout(1, 1, 0, 0));
         fileTypeCb = new JComboBox<String>();
         fileTypeCb.setModel(new DefaultComboBoxModel<String>(new String[] {"全部", "文件", "目录"}));
-        panel02.add(fileTypeCb);
+        panel17.add(fileTypeCb);
         
         
         JPanel panel03 = new JPanel();
         paramPanel.add(panel03);
-        panel03.setLayout(new GridLayout(2, 1, 0, 0));
+        panel03.setLayout(new GridLayout(1, 1, 0, 0));
         JLabel label_2 = new JLabel("所属磁盘：");
         panel03.add(label_2);
+        
+        JPanel panel18 = new JPanel();
+        paramPanel.add(panel18);
+        panel18.setLayout(new GridLayout(1, 1, 0, 0));
         diskCb = new JComboBox<String>();
-        panel03.add(diskCb);
+        panel18.add(diskCb);
         
         
         JPanel panel04 = new JPanel();
@@ -971,10 +1181,11 @@ public class StartUp {
         JPanel panel05 = new JPanel();
         paramPanel.add(panel05);
         panel05.setLayout(new GridLayout(2, 2, 0, 0));
-        
         scanWithHashCb = new JCheckBox("扫描磁盘同时计算Hash");
         panel05.add(scanWithHashCb);
         
+        JPanel panel20 = new JPanel();
+        paramPanel.add(panel20);
         
         JPanel panel06 = new JPanel();
         paramPanel.add(panel06);
@@ -987,7 +1198,7 @@ public class StartUp {
         
         JPanel panel07 = new JPanel();
         paramPanel.add(panel07);
-        panel07.setLayout(new GridLayout(2, 1, 0, 0));
+        panel07.setLayout(new GridLayout(1, 1, 0, 0));
         
         JPanel panel10 = new JPanel();
         panel07.add(panel10);
@@ -1013,15 +1224,16 @@ public class StartUp {
         totalItemLb = new JLabel("-");
         panel10.add(totalItemLb);
         
+        JPanel panel19 = new JPanel();
+        paramPanel.add(panel19);
         JPanel panel11 = new JPanel();
-        panel07.add(panel11);
+        panel19.add(panel11);
         
         pagerSlider = new JSlider();
         pagerSlider.setMinimum(1);
         pagerSlider.setMaximum(1);
         pagerSlider.setValue(1);
         panel11.add(pagerSlider);
-        
         
         JPanel panel09 = new JPanel();
         paramPanel.add(panel09);
