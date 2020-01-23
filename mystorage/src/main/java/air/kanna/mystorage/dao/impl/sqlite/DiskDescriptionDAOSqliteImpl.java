@@ -104,7 +104,7 @@ public class DiskDescriptionDAOSqliteImpl
             .append("(version, base_path, description, last_update) ")
             .append(" VALUES( \'")
             .append(object.getVersion()).append("\', \'")
-            .append(object.getBasePath()).append("\', \'")
+            .append(getFixedString(object.getBasePath())).append("\', \'")
             .append(object.getDescription()).append("\', \'")
             .append(object.getLastUpdate()).append("\')");
         return sb.toString();
@@ -120,7 +120,7 @@ public class DiskDescriptionDAOSqliteImpl
             sb.append(", version = \'").append(object.getVersion()).append('\'');
         }
         if(StringUtil.isNotNull(object.getBasePath())) {
-            sb.append(", base_path = \'").append(object.getBasePath()).append('\'');
+            sb.append(", base_path = \'").append(getFixedString(object.getBasePath())).append('\'');
         }
         if(StringUtil.isNotNull(object.getDescription())) {
             sb.append(", description = \'").append(object.getDescription()).append('\'');

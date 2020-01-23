@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 import air.kanna.mystorage.dao.BaseModelDAO;
 import air.kanna.mystorage.dao.OrderBy;
 import air.kanna.mystorage.dao.Pager;
+import air.kanna.mystorage.util.StringUtil;
 
 public abstract class BaseSqliteDAO<T> implements BaseModelDAO<T>{
     private static final Logger logger = Logger.getLogger(BaseSqliteDAO.class);
@@ -207,5 +208,15 @@ public abstract class BaseSqliteDAO<T> implements BaseModelDAO<T>{
             return sb.toString();
         }
         return "";
+    }
+    
+    protected String getFixedString(String orgStr) {
+        if(StringUtil.isNull(orgStr)) {
+            return "";
+        }
+        if(orgStr.indexOf('\'') >= 0) {
+            return orgStr.replaceAll("\'", "\'\'");
+        }
+        return orgStr;
     }
 }
