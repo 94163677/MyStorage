@@ -26,7 +26,7 @@ public class FileItemListComparer implements ListComparer<FileItem> {
         int index = -1;
         FileItem destItem = null;
         OperationItem<FileItem> oper = null;
-        Comparator<FileItem> comparator = (FileItem a, FileItem b) -> a.getFileName().compareTo(b.getFileName());
+        Comparator<FileItem> comparator = (FileItem a, FileItem b) -> a.getFilePath().compareTo(b.getFilePath());
         
         Collections.sort(baseFileList, comparator);
         Collections.sort(destFileList, comparator);

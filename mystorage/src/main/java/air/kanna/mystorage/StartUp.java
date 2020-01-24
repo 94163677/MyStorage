@@ -487,7 +487,7 @@ public class StartUp {
                             case REP: {
                                 if(itemService.deleteById(operItem.getOrgItem().getId()) <= 0) {
                                     errorList.add(operItem);
-                                    logger.error("REP error: " + operItem.getOrgItem().getFileName());
+                                    logger.error("REP error: " + operItem.getOrgItem().getFilePath());
                                 }
                             };
                             case ADD: {
@@ -496,18 +496,18 @@ public class StartUp {
                                 }
                                 if(itemService.add(operItem.getItem()) <= 0) {
                                     errorList.add(operItem);
-                                    logger.error("ADD error: " + operItem.getItem().getFileName());
+                                    logger.error("ADD error: " + operItem.getItem().getFilePath());
                                 }
                             };break;
                             case DEL: {
                                 if(itemService.deleteById(operItem.getItem().getId()) <= 0) {
                                     errorList.add(operItem);
-                                    logger.error("DEL error: " + operItem.getItem().getFileName());
+                                    logger.error("DEL error: " + operItem.getItem().getFilePath());
                                 }
                             };break;
                         }
                     }catch(Exception e) {
-                        logger.error("process FileItem Error: " + operItem.getItem().getFileName(), e);
+                        logger.error("process FileItem Error: " + operItem.getItem().getFilePath(), e);
                         errorList.add(operItem);
                     }
                     if(isHash) {
