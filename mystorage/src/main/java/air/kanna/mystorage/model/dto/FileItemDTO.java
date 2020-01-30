@@ -67,14 +67,14 @@ public class FileItemDTO {
      * 19字节
      * 格式：YYYY-MM-DD HH:mm:SS
      */
-    protected long createDate = -1L;
+    protected long createDate = 19000101000000L;
     
     /*
      * 文件最后修改日期
      * 19字节
      * 格式：YYYY-MM-DD HH:mm:SS
      */
-    protected long lastModDate = -1L;
+    protected long lastModDate = 19000101000000L;
     
     /*
      * 文件备注

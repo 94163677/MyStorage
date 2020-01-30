@@ -96,11 +96,15 @@ public class LocalSourceFileItemGetter implements SourceFileItemGetter {
             item.setLastModDate(
                     DateTimeUtil.getDateTimeFromTimeMillis(
                             bAttributes.lastModifiedTime().toMillis()));
-        } catch (IOException e) {
-            logger.warn("Cannot read File's times", e);
-            item.setLastModDate(
-                    DateTimeUtil.getDateTimeFromTimeMillis(
-                            file.lastModified()));
+        } catch (Exception e) {
+            logger.warn("Cannot read File's times: " + file.getAbsolutePath(), e);
+            try{
+	            item.setLastModDate(
+	                    DateTimeUtil.getDateTimeFromTimeMillis(
+	                            file.lastModified()));
+            }catch(Exception e2){
+            	logger.warn("Cannot read File's times: " + file.getAbsolutePath(), e2);
+            }
         }
     }
 

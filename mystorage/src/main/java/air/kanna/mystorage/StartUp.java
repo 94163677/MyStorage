@@ -515,10 +515,13 @@ public class StartUp {
                     }else {
                         processedLen++;
                     }
-                    
-                    current = (long)((800 * processedLen) / totalLen) + 200;
-                    currTime = System.currentTimeMillis();
-                    leftSecond = (long)(((currTime - prevTime) * (totalLen - processedLen)) / (processedLen * 1000));
+                    try{
+	                    current = (long)((800 * processedLen) / totalLen) + 200;
+	                    currTime = System.currentTimeMillis();
+	                    leftSecond = (long)(((currTime - prevTime) * (totalLen - processedLen)) / (processedLen * 1000));
+                    }catch(Exception e){
+                    	logger.warn("Calate Time error", e);
+                    }
                 }
                 setErrorFileItemToClipboard(errorList);
                 processListener.finish("处理完成");
